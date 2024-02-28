@@ -1,15 +1,16 @@
-const mongoonse = require( 'mongoose' );;
+const mongoose = require( 'mongoose' );
+const bcrypt = require('bcrypt');
 
-mongoonse.connect('mongodb+srv://whaleInSpace:aHX18KLJaNmCnQrf@0x.bxbegwj.mongodb.net/Wallet-App');
+mongoose.connect('mongodb+srv://whaleInSpace:aHX18KLJaNmCnQrf@0x.bxbegwj.mongodb.net/Wallet-App');
 
 const userSchema =  mongoose.Schema({
-    userName : {
+    username : {
         type: String,
         required : true,
         unique : true,
         trim: true,
         lowercase: true,
-        minlength: 3,
+        minlength: 3,   
         maxlength: 30
     },
     password : {
@@ -17,20 +18,31 @@ const userSchema =  mongoose.Schema({
         required: true,
         minlength: 8
     },
-    firstName: {
+    firstname: {
         type: String,
         required: true,
         trim : true,
         maxlength: 30
     },
-    lastName:{
+    lastname:{
         type: String,
         required : true,
         trim: true,
         maxlength: 30
     }
 });
-const User = mongoonse.model("Users", userSchema);
+
+userSchema.methods.createHash = async (plainTextPassword)=>{
+    const saltRounds = 10;
+
+    const salt = await bcrypt.genSalt(saltRounds);
+    return await bcrypt.hash(plainTextPassword, salt);
+
+}
+userSchema.methods.checkPassword = async (userPassword)=>{
+    return await bcrypt.compare(userPassword, this.password);
+}
+const User = mongoose.model("Users", userSchema);
 
 module.exports = {
     User
