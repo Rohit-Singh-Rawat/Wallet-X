@@ -39,7 +39,7 @@ userSchema.methods.createHash = async (plainTextPassword)=>{
     return await bcrypt.hash(plainTextPassword, salt);
 
 }
-userSchema.methods.checkPassword = async (userPassword)=>{
+userSchema.methods.checkPassword = async function (userPassword){
     return await bcrypt.compare(userPassword, this.password);
 }
 const User = mongoose.model("Users", userSchema);

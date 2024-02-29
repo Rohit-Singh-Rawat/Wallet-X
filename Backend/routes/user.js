@@ -5,6 +5,7 @@ const { User } = require('../bd.js');
 
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config.js');
+const { authMiddleware } = require('../middleware.js');
 
 const userRouter = express.Router();
 
@@ -46,6 +47,63 @@ userRouter.post('/signup', async (req, res) => {
         user: user
     })
 
+})
+const signinBodySchema = zod.object({
+    username: zod.string().email(),
+    password: zod.string()
+})
+userRouter.post('/signin', async (req, res) => {
+    const { success } = await signinBodySchema.safeParse(req.body);
+    if (!success) {
+        return res.status(411).json({
+            message: "Invalid Inputs"
+        })
+    }
+
+    let user = await User.findOne({ username: req.body.username });
+    if (!user) {
+        return res.status(411).json({
+            message: "Email not found"
+        })
+    }
+    if (await user.checkPassword(req.body.password)) {
+        const token = jwt.sign({
+            userId: user._id
+        }, JWT_SECRET);
+        return res.json({
+            token
+        })
+    }
+    else {
+        return res.status(411).json({
+            message: "Wrong Password!"
+        })
+    }
+
+})
+
+const updateBodySchema = zod.object({
+    password: zod.string().min(8).optional(),
+    firstname: zod.string().max(150).optional(),
+    lastname: zod.string().max(150).optional()
+});
+userRouter.put('/', authMiddleware, async (req, res) => {
+    const {success} = updateBodySchema.safeParse(req.body);
+    if(!success){
+        return res.status(411).json({
+            message: "Invalid inputs"
+        })
+    }
+    const user = await User.findOne({ _id : req.userId});
+    if(!user){
+        return res.status(403).json({
+            message: "User not found"
+        })
+    }
+    await User.updateOne({_id: req.userId}, req.body)
+    res.json({
+        message: "Updated successfully"
+    })
 })
 
 module.exports = userRouter;
