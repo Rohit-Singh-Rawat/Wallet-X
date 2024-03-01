@@ -18,13 +18,13 @@ const userSchema =  mongoose.Schema({
         required: true,
         minlength: 8
     },
-    firstname: {
+    firstName: {
         type: String,
         required: true,
         trim : true,
         maxlength: 30
     },
-    lastname:{
+    lastName:{
         type: String,
         required : true,
         trim: true,
@@ -42,9 +42,27 @@ userSchema.methods.createHash = async (plainTextPassword)=>{
 userSchema.methods.checkPassword = async function (userPassword){
     return await bcrypt.compare(userPassword, this.password);
 }
+
+
+const accountSchema = mongoose.Schema({
+    userId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'User',
+        unique :true,
+        required: true
+    },
+    balance : {
+        type : Number,
+        required : true
+    }
+})
+
+const Account = mongoose.model('Account', accountSchema);
+
 const User = mongoose.model("Users", userSchema);
 
 module.exports = {
-    User
+    User,
+    Account
 }
 

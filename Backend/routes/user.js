@@ -12,8 +12,8 @@ const userRouter = express.Router();
 const signupBodySchema = zod.object({
     username: zod.string().email(),
     password: zod.string().min(8),
-    firstname: zod.string().max(150),
-    lastname: zod.string().max(150)
+    firstName: zod.string().max(150),
+    lastName: zod.string().max(150)
 })
 
 userRouter.post('/signup', async (req, res) => {
@@ -33,8 +33,8 @@ userRouter.post('/signup', async (req, res) => {
     }
     const user = new User({
         username: req.body.username,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
     });
     user.password = await user.createHash(req.body.password);
     const userId = user._id;
@@ -66,6 +66,7 @@ userRouter.post('/signin', async (req, res) => {
             message: "Email not found"
         })
     }
+
     if (await user.checkPassword(req.body.password)) {
         const token = jwt.sign({
             userId: user._id
@@ -84,25 +85,46 @@ userRouter.post('/signin', async (req, res) => {
 
 const updateBodySchema = zod.object({
     password: zod.string().min(8).optional(),
-    firstname: zod.string().max(150).optional(),
-    lastname: zod.string().max(150).optional()
+    firstName: zod.string().max(150).optional(),
+    lastName: zod.string().max(150).optional()
 });
 userRouter.put('/', authMiddleware, async (req, res) => {
-    const {success} = updateBodySchema.safeParse(req.body);
-    if(!success){
+    const { success } = updateBodySchema.safeParse(req.body);
+    if (!success) {
         return res.status(411).json({
             message: "Invalid inputs"
         })
     }
-    const user = await User.findOne({ _id : req.userId});
-    if(!user){
+    const user = await User.findOne({ _id: req.userId });
+    if (!user) {
         return res.status(403).json({
             message: "User not found"
         })
     }
-    await User.updateOne({_id: req.userId}, req.body)
+    await User.updateOne({ _id: req.userId }, req.body)
     res.json({
         message: "Updated successfully"
+    })
+})
+
+userRouter.get('/bulk', authMiddleware, async (req, res) => {
+    const filter = req.query.filter || "";
+
+    const users = await User.find({
+        $or: [
+            { 'firstName': { $regex: filter, '$options': 'i' } },
+            { 'lastName': { $regex: filter, '$options': 'i' } }
+        ]
+    })
+
+    res.json({
+        users: users.map((user) => {
+            return ({
+                "firstName": user.firstName,
+                "lastName": user.lastName,
+                "_id": user._id
+            })
+        })
     })
 })
 
