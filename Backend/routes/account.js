@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose')
 const { authMiddleware } = require('../middleware');
 const { Account } = require('../bd');
 
@@ -46,7 +47,6 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
         })
     }
     catch (error) {
-        await session.abortTransaction();
         if (session) {
             await session.abortTransaction();
         }
@@ -61,6 +61,4 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
 
 })
 
-module.exports = {
-    accountRouter
-}
+module.exports = accountRouter
