@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Signup from './components/Signup';
-import Signin from './components/Signin';
-import DashBoard from './components/DashBoard';
-import SendMoney from './components/SendMoney';
+import Signup from './pages/Signup';
+import {Signin} from './pages/Signin';
+import DashBoard from './pages/DashBoard';
+import SendMoney from './pages/SendMoney';
 
 function App() {
 	const [count, setCount] = useState(0);
