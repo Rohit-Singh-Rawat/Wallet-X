@@ -1,3 +1,147 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Black.otf') format('opentype');
+	font-weight: 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-BlackItalic.otf') format('opentype');
+	font-weight: 900;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Bold.otf') format('opentype');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-BoldItalic.otf') format('opentype');
+	font-weight: 700;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Book.otf') format('opentype');
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-BookItalic.otf') format('opentype');
+	font-weight: 500;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-ExtraLight.otf') format('opentype');
+	font-weight: 200;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-ExtraLightItalic.otf') format('opentype');
+	font-weight: 200;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Hairline.otf') format('opentype');
+	font-weight: 100;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-HairlineItalic.otf') format('opentype');
+	font-weight: 100;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Heavy.otf') format('opentype');
+	font-weight: 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-HeavyItalic.otf') format('opentype');
+	font-weight: 900;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Light.otf') format('opentype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-LightItalic.otf') format('opentype');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Regular.otf') format('opentype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-RegularItalic.otf') format('opentype');
+	font-weight: 400;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-SemiBold.otf') format('opentype');
+	font-weight: 600;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-SemiBoldItalic.otf') format('opentype');
+	font-weight: 600;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-Thin.otf') format('opentype');
+	font-weight: 100;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Mont';
+	src: url('./assets/fonts/Mont/Mont-ThinItalic.otf') format('opentype');
+	font-weight: 100;
+	font-style: italic;
+}
+
+:root {
+	font-family: Mont;
+}
