@@ -40,7 +40,7 @@ const Settings = () => {
 							Current Password{' '}
 							<input
 								type='text'
-								placeholder='Enter your Last name'
+								placeholder='Enter your Current password'
 								className='bg-transparent pl-3 text-sm outline-none w-full p-2 rounded-xl border-[0.5px] '
 							/>
 						</div>
@@ -48,7 +48,7 @@ const Settings = () => {
 							New Password
 							<input
 								type='text'
-								placeholder='Enter your new password'
+								placeholder='Enter your New password'
 								className='bg-transparent pl-3 text-sm outline-none w-full p-2 rounded-xl border-[0.5px] '
 							/>
 						</div>

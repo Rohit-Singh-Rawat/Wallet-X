@@ -9,7 +9,7 @@ export const SideBar = (userFirstName) => {
 					<img
 						src={logo}
 						alt=''
-						className='h-[70px] cursor-pointer'
+						className='h-[70px]]'
 					/>
 				</div>
 				<div className='flex flex-col w-full mb-[150px]'>

@@ -40,15 +40,14 @@ userRouter.post('/signup', async (req, res) => {
     const userId = user._id;
     await user.save();
     await Account.create({
-        userId : userId,
-        balance : 1 + Math.random() * 10000
+        userId: userId,
+        balance: 1 + Math.random() * 10000
     })
     const token = jwt.sign({ userId }, JWT_SECRET);
 
     res.json({
         message: "user created successfully",
         token: token,
-        user: user
     })
 
 })
@@ -88,12 +87,18 @@ userRouter.post('/signin', async (req, res) => {
 })
 
 const updateBodySchema = zod.object({
-    password: zod.string().min(8).optional(),
+    currentPassword: zod.string().min(8).optional(),
+    newPassword: zod.string().min(8).optional(),
     firstName: zod.string().max(150).optional(),
     lastName: zod.string().max(150).optional()
+}).refine((data)=>{
+    if (data.newPassword && !data.currentPassword){
+        return false
+    }
+    return true
 });
 userRouter.put('/', authMiddleware, async (req, res) => {
-    const { success } = updateBodySchema.safeParse(req.body);
+    const { success } = await updateBodySchema.safeParse(req.body);
     if (!success) {
         return res.status(411).json({
             message: "Invalid inputs"
@@ -105,13 +110,51 @@ userRouter.put('/', authMiddleware, async (req, res) => {
             message: "User not found"
         })
     }
-    await User.updateOne({ _id: req.userId }, req.body)
-    res.json({
-        message: "Updated successfully"
-    })
+
+    if (req.body.password) {
+        if (await user.checkPassword(req.body.password)) {
+            await User.updateOne({ _id: req.userId }, req.body)
+            res.json({
+                message: "Updated successfully"
+            })
+        }
+        else {
+            res.json({
+                message: "Invalid Password"
+            })
+        }
+    }
+    else {
+        await User.updateOne({ _id: req.userId }, req.body)
+        res.json({
+            message: "Updated successfully"
+        })
+    }
+
+
+
 })
 
-userRouter.get('/bulk', authMiddleware, async (req, res) => {
+userRouter.get('/dashboard', authMiddleware, async (req, res) => {
+    const user = await User.findById(req.userId);
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+    const account = await Account.findOne({ userId: req.userId });
+    const balance = account.balance;
+    console.log(account)
+    const transactions = await Account.findOne({ userId: req.userId }).populate({ path: 'transactions', options: { limit: 5 } }).exec();
+
+    req.json({
+        firstName : user.firstName,
+        lastName : user.lastName,
+        balance : balance,
+        transactions : transactions
+    })
+
+})
+
+userRouter.get('/search', authMiddleware, async (req, res) => {
     const filter = req.query.filter || "";
 
     const users = await User.find({
@@ -123,13 +166,16 @@ userRouter.get('/bulk', authMiddleware, async (req, res) => {
 
     res.json({
         users: users.map((user) => {
-            return ({
+            return (user._id != req.userId ? {
                 "firstName": user.firstName,
                 "lastName": user.lastName,
                 "_id": user._id
-            })
+            } : null)
         })
     })
 })
+
+
+
 
 module.exports = userRouter;

@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const { authMiddleware } = require('../middleware');
-const { Account } = require('../bd');
+const { Account, Transaction } = require('../bd');
 
 const accountRouter = express.Router();
 
@@ -38,12 +38,22 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
         if (amount > senderAccount.balance) {
             throw new Error("Insufficient balance")
         }
-        await Account.updateOne({ userId: req.userId }, { $inc: { balance: -amount } }).session(session);
-        await Account.updateOne({ userId: to }, { $inc: { balance: amount } }).session(session);
+        const transaction = await Transaction.create([{
+            senderAccountId: senderAccount._id,
+            receiverAccountId: receiverAccount._id,
+            amount: amount,
+            date:Date.now()
+        }], {
+            session: session
+        }
+        )
+
+        await Account.updateOne({ userId: req.userId }, { $inc: { balance: -amount }, $push: { transactions: transaction[0]._id }  }).session(session);
+        await Account.updateOne({ userId: to }, { $inc: { balance: amount }, $push: { transactions: transaction[0]._id }  }).session(session);
 
         await session.commitTransaction();
         res.json({
-            message : "Transfer successful"
+            message: "Transfer successful"
         })
     }
     catch (error) {
@@ -59,6 +69,18 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
     }
 
 
+})
+
+accountRouter.get('/transactions' , authMiddleware , async (req, res)=>{
+    const account = await Account.findOne({userId : req.userId});
+    if (!account) {
+        return res.status(404).json({ error: 'Account not found' });
+    }
+    const transactions = await account.populate('transactions').execPopulate();
+
+    res.json({
+        transactions
+    })
 })
 
 module.exports = accountRouter
