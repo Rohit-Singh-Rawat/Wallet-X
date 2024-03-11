@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 import DashBoard from './pages/DashBoard';
 import SendMoney from './pages/SendMoney';
+import Settings from './pages/Settings';
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -28,6 +29,10 @@ function App() {
 					<Route
 						path='/send'
 						element={<SendMoney></SendMoney>}
+					></Route>
+					<Route
+						path='/settings'
+						element={<Settings></Settings>}
 					></Route>
 				</Routes>
 			</BrowserRouter>

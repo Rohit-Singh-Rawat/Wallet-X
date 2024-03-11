@@ -1,24 +1,26 @@
-import React, { useEffect } from 'react'
-import { SideBar } from '../components/SideBar'
-import Balance from '../components/Balance'
-import Users from '../components/Users'
-import History from '../components/History'
-import Header from '../components/Header'
+import React, { useEffect } from 'react';
+import { SideBar } from '../components/SideBar';
+import Balance from '../components/Balance';
+import Users from '../components/Users';
+import History from '../components/History';
+import Header from '../components/Header';
 
 const DashBoard = () => {
-
-  
-  return (
+	return (
 		<div className='flex bg-[black]'>
 			<SideBar></SideBar>
-			<div className='bg-black w-full h-full text-white'>
-				<Header></Header>
-				<Balance amount='50000'></Balance>
-				<Users></Users>
-        <History></History>
+			<div className='bg-black w-full h-full fe text-white'>
+				<Header username={'rohit'}></Header>
+				<div className=' flex justify-between '>
+					<div>
+						<Balance amount='50000'></Balance>
+						<History></History>
+					</div>
+					<Users></Users>
+				</div>
 			</div>
 		</div>
 	);
-}
+};
 
-export default DashBoard
+export default DashBoard;
