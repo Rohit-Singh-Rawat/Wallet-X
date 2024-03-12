@@ -47,7 +47,7 @@ userSchema.methods.checkPassword = async function (userPassword) {
 const accountSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Users',
         unique: true,
         required: true
     },
@@ -55,7 +55,7 @@ const accountSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' }]
+    transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transactions' }]
 
 })
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const zod = require('zod');
 const rootRouter = require('./index.js');
-const { User, Account } = require('../bd.js');
+const { User, Account, Transaction } = require('../bd.js');
 
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config.js');
@@ -140,12 +140,11 @@ userRouter.get('/dashboard', authMiddleware, async (req, res) => {
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
-    const account = await Account.findOne({ userId: req.userId });
+   
+    const account = await Account.findOne({ userId: req.userId }).populate({ path: 'transactions', options: { limit: 5 } }).exec();
     const balance = account.balance;
-    console.log(account)
-    const transactions = await Account.findOne({ userId: req.userId }).populate({ path: 'transactions', options: { limit: 5 } }).exec();
-
-    req.json({
+    const transactions = account.transactions;
+    res.json({
         firstName : user.firstName,
         lastName : user.lastName,
         balance : balance,

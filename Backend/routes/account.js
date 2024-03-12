@@ -25,6 +25,9 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
     session.startTransaction();
     try {
         const { to, amount } = req.body;
+        if (to === userId){
+            throw new Error("Can not send money to self");
+        }
         const senderAccount = await Account.findOne({
             userId: req.userId
         }).session(session);
@@ -42,7 +45,7 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
             senderAccountId: senderAccount._id,
             receiverAccountId: receiverAccount._id,
             amount: amount,
-            date:Date.now()
+            date: Date.now()
         }], {
             session: session
         }
@@ -72,12 +75,11 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
 })
 
 accountRouter.get('/transactions' , authMiddleware , async (req, res)=>{
-    const account = await Account.findOne({userId : req.userId});
+    const account = await Account.findOne({ userId: req.userId }).populate('transactions').exec();
     if (!account) {
         return res.status(404).json({ error: 'Account not found' });
     }
-    const transactions = await account.populate('transactions').execPopulate();
-
+    const transactions = account.transactions;
     res.json({
         transactions
     })
