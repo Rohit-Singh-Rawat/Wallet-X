@@ -1,5 +1,5 @@
 import React from 'react';
-const Header = ({ username }) => {
+const Header = ({ username, avatar }) => {
 	return (
 		<div className=' text-sm sm:text-lg flex justify-between p-2 items-center border-b-2 border-[#1A1A1A]'>
 			<div className=' p-3 ml-2'>

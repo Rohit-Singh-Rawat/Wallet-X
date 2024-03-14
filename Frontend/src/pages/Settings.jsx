@@ -10,8 +10,8 @@ const Settings = () => {
 		<div className='flex bg-[black]'>
 			<SideBar current={"Settings"}></SideBar>
 			<div className='bg-black w-full h-full  text-white'>
-				<Header username={'rohit'}></Header>
-				<div className='flex flex-col gap-5 mt-10 mx-8'>
+					
+				<div className='flex flex-col gap-7 mt-10 mx-8'>
 					<h1 className='text-4xl font-bold'>Account</h1>
 					<h2 className='text-2xl mt-5 font-semibold'>Profile</h2>
 					<p className='text-sm font-extralight'>

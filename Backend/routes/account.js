@@ -25,7 +25,7 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
     session.startTransaction();
     try {
         const { to, amount } = req.body;
-        if (to === userId){
+        if (to === req.userId) {
             throw new Error("Can not send money to self");
         }
         const senderAccount = await Account.findOne({
@@ -51,8 +51,8 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
         }
         )
 
-        await Account.updateOne({ userId: req.userId }, { $inc: { balance: -amount }, $push: { transactions: transaction[0]._id }  }).session(session);
-        await Account.updateOne({ userId: to }, { $inc: { balance: amount }, $push: { transactions: transaction[0]._id }  }).session(session);
+        await Account.updateOne({ userId: req.userId }, { $inc: { balance: -amount }, $push: { transactions: transaction[0]._id } }).session(session);
+        await Account.updateOne({ userId: to }, { $inc: { balance: amount }, $push: { transactions: transaction[0]._id } }).session(session);
 
         await session.commitTransaction();
         res.json({
@@ -74,12 +74,54 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
 
 })
 
-accountRouter.get('/transactions' , authMiddleware , async (req, res)=>{
-    const account = await Account.findOne({ userId: req.userId }).populate('transactions').exec();
+accountRouter.get('/transactions', authMiddleware, async (req, res) => {
+    const account = await Account.findOne({ userId: req.userId });
     if (!account) {
         return res.status(404).json({ error: 'Account not found' });
     }
-    const transactions = account.transactions;
+    await Account.populate([account], { path: 'transactions' });
+
+    
+    let  transactions = account.transactions;
+    await Account.populate(transactions, [
+        { path: 'senderAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, // Populate senderAccountId if userId is not the user's userId
+        { path: 'receiverAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, {
+            path: 'senderAccountId',
+            populate: { path: 'userId', select: ['firstName', 'lastName','avatar'] }
+        },
+        {
+            path: 'receiverAccountId',
+            populate: { path: 'userId', select: ['firstName', 'lastName', 'avatar'] }
+        } // Populate receiverAccountId if userId is not the user's userId
+    ]);
+    transactions = transactions.map(transaction =>{
+        console.log(transaction)
+        let type ;
+        let accountInfo ={};
+        if (transaction.senderAccountId == null){
+            type = "debit"
+            accountInfo ={
+                "accountId" : transaction.receiverAccountId._id,
+                "userInfo" : transaction.receiverAccountId.userId
+            }
+        }
+        else if(transaction.receiverAccountId == null){
+            type = "credit"
+            accountInfo = {
+                "accountId": transaction.senderAccountId._id,
+                "userInfo": transaction.senderAccountId.userId
+            }
+        }
+        
+        return {
+            transactionId : transaction._id,
+            type :type,
+            accountInfo : accountInfo,
+            time :transaction.timestamp,
+            amount :transaction.amount
+        }
+
+    })
     res.json({
         transactions
     })

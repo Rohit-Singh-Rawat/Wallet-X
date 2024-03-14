@@ -13,7 +13,8 @@ const signupBodySchema = zod.object({
     username: zod.string().email(),
     password: zod.string().min(8),
     firstName: zod.string().max(150),
-    lastName: zod.string().max(150)
+    lastName: zod.string().max(150),
+    
 })
 
 userRouter.post('/signup', async (req, res) => {
@@ -31,10 +32,24 @@ userRouter.post('/signup', async (req, res) => {
             message: "User Already Exist"
         })
     }
+    const colors = [
+        "#87CEEB", // Light Blue
+        "#90EE90", // Light Green
+        "#F08080", // Light Coral
+        "#FFA07A", // Light Salmon
+        "#FFB6C1", // Light Pink
+        "#87CEFA", // Light Sky Blue
+        "#778899", // Light Slate Gray
+        "#B0C4DE", // Light Steel Blue
+        "#FFFFE0", // Light Yellow
+        "#FAFAD2"  // Light Goldenrod Yellow
+    ]
+    
     const user = new User({
         username: req.body.username,
         firstName: req.body.firstName,
-        lastName: req.body.lastName
+        lastName: req.body.lastName,
+        avatar: colors[Math.floor(Math.random() * 10)]
     });
     user.password = await user.createHash(req.body.password);
     const userId = user._id;
@@ -140,14 +155,53 @@ userRouter.get('/dashboard', authMiddleware, async (req, res) => {
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
-   
-    const account = await Account.findOne({ userId: req.userId }).populate({ path: 'transactions', options: { limit: 5 } }).exec();
-    const balance = account.balance;
-    const transactions = account.transactions;
+    const account = await Account.findOne({ userId: req.userId });
+    await Account.populate([account], { path: 'transactions' });
+
+
+    let transactions = account.transactions;
+    await Account.populate(transactions, [
+        { path: 'senderAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, // Populate senderAccountId if userId is not the user's userId
+        { path: 'receiverAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, {
+            path: 'senderAccountId',
+            populate: { path: 'userId', select: ['firstName', 'lastName', 'avatar'] }
+        },
+        {
+            path: 'receiverAccountId',
+            populate: { path: 'userId', select: ['firstName', 'lastName', 'avatar'] }
+        } // Populate receiverAccountId if userId is not the user's userId
+    ]);
+    transactions = transactions.map(transaction => {
+        console.log(transaction.timestamp)
+        let type;
+        let accountInfo = {};
+        if (transaction.senderAccountId == null) {
+            type = "debit"
+            accountInfo = {
+                "accountId": transaction.receiverAccountId._id,
+                "userInfo": transaction.receiverAccountId.userId
+            }
+        }
+        else if (transaction.receiverAccountId == null) {
+            type = "credit"
+            accountInfo = {
+                "accountId": transaction.senderAccountId._id,
+                "userInfo": transaction.senderAccountId.userId
+            }
+        }
+        return {
+            transactionId: transaction._id,
+            type: type,
+            accountInfo: accountInfo,
+            time: transaction.timestamp,
+            amount: transaction.amount
+        }
+
+    })
     res.json({
         firstName : user.firstName,
         lastName : user.lastName,
-        balance : balance,
+        balance : account.balance,
         transactions : transactions
     })
 
@@ -161,7 +215,7 @@ userRouter.get('/search', authMiddleware, async (req, res) => {
             { 'firstName': { $regex: filter, '$options': 'i' } },
             { 'lastName': { $regex: filter, '$options': 'i' } }
         ]
-    })
+    }).limit(10).exec();
 
     res.json({
         users: users.map((user) => {

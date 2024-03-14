@@ -2,52 +2,52 @@ import React, { useState } from 'react';
 const Users = ({}) => {
 	const [users, setUsers] = useState([
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		},
 		{
-			firstName: 'Harkirat',
+			firstName: 'Ram',
 			lastName: 'Singh',
 			_id: 1,
 		}, 

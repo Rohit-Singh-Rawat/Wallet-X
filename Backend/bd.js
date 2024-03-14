@@ -30,6 +30,10 @@ const userSchema = mongoose.Schema({
         trim: true,
         maxlength: 30
     },
+    avatar : {
+        type : String,
+        default: "#90EE90"
+    }
     });
 
 userSchema.methods.createHash = async (plainTextPassword) => {
@@ -63,19 +67,19 @@ const transactionsSchema = mongoose.Schema({
     senderAccountId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
-        required: 'true',
-        index: 'true'
+        required: true,
+        index: true
 
     },
     receiverAccountId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
-        required: 'true',
-        index: 'true'
+        required: true,
+        index: true
     },
     amount: {
         type: Number,
-        require: 'true'
+        require: true
     },
     timestamp: {
         type: Date,
