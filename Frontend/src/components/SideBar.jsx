@@ -3,7 +3,7 @@ import logo from '../assets/imgs/logo.png';
 import { Link } from 'react-router-dom';
 export const SideBar = (userFirstName) => {
 	return (
-		<aside className='fixed lg:sticky left-0 top-0 z-10 h-[100dvh] w-full overflow-hidden transition-all duration-300 lg:opacity-100 opacity-0 lg:max-w-[224px]'>
+		<aside className='fixed lg:sticky left-0 top-0 z-10 h-[100dvh] w-full overflow-hidden transition-all duration-300 lg:opacity-100 opacity-0 lg:max-w-[224px] lg:min-w-[224px]'>
 			<div className='relative mr-auto transition-transform duration-300 items-center ease-in-out flex flex-col max-w-[224px] px-2 py-4 h-[100dvh] gap-4 bg-[#1A1A1A] justify-between -translate-x-full lg:translate-x-0'>
 				<div className='flex justify-center w-fit'>
 					<img

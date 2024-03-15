@@ -32,18 +32,19 @@ userRouter.post('/signup', async (req, res) => {
             message: "User Already Exist"
         })
     }
-    const colors = [
-        "#87CEEB", // Light Blue
-        "#90EE90", // Light Green
-        "#F08080", // Light Coral
-        "#FFA07A", // Light Salmon
-        "#FFB6C1", // Light Pink
-        "#87CEFA", // Light Sky Blue
-        "#778899", // Light Slate Gray
-        "#B0C4DE", // Light Steel Blue
-        "#FFFFE0", // Light Yellow
-        "#FAFAD2"  // Light Goldenrod Yellow
-    ]
+    const darkColors = [
+        "#4D8FAC", 
+        "#4C8E4C", 
+        "#8B3E3E", 
+        "#B45341", 
+        "#B06A7A", 
+        "#4D85A9", 
+        "#424C54", 
+        "#7A8EAB", 
+        "#B5B590", 
+        "#B0AE87" 
+    ];
+
     
     const user = new User({
         username: req.body.username,

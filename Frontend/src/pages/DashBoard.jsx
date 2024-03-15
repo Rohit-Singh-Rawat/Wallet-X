@@ -5,12 +5,16 @@ import Users from '../components/Users';
 import History from '../components/History';
 import Header from '../components/Header';
 import TransactionBox from '../components/TransactionBox';
+import { useRecoilState } from 'recoil';
+import { transactionAtom } from '../store/atom/TransactionInfo';
+import { useMemo } from 'react';
 
 
 const dashboard = {
 	firstName: 'John',
 	lastName: 'Doe',
 	balance: 1000,
+	accountId: 'account1',
 	transactions: [
 		{
 			transactionId: 'transaction1',
@@ -85,13 +89,24 @@ const dashboard = {
 	],
 };
 
-
 const DashBoard = () => {
+	const [info, setInfo] = useRecoilState(transactionAtom)
+	useMemo(() => {
+		setInfo((info) => {
+			return {
+				...info,
+				display : false,
+				firstName: dashboard.firstName,
+				lastName: dashboard.lastName,
+				accountId: dashboard.accountId,
+			};
+		});
+	}, [dashboard]);
 	return (
-		<div className='flex bg-[black]'>
+		<div className='flex bg-[black] '>
 			<SideBar></SideBar>
 			<TransactionBox></TransactionBox>
-			<div className='bg-black w-full h-full fe text-white'>
+			<div className='bg-black w-full h-full flex flex-col text-white  '>
 				<Header username={dashboard.firstName}></Header>
 				<div className=' flex justify-between '>
 					<div>
