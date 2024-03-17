@@ -5,17 +5,30 @@ const { Account, Transaction } = require('../bd');
 
 const accountRouter = express.Router();
 
-accountRouter.get('/balance', authMiddleware, async (req, res) => {
+accountRouter.get('/account', authMiddleware, async (req, res) => {
+    const user = await User.findOne({
+        _id : req.userId
+    })
+    if(!user){
+        return res.status(400).json({
+            message: "User not found"
+        })
+    }
     const account = await Account.findOne({
         userId: req.userId
     });
+
     if (!account) {
         return res.status(400).json({
             message: "Account not found"
         })
     }
+
     res.json({
-        balance: account.balance
+        accountId : account._id,
+        firstName : user.firstName,
+        lastName : user.lastName,
+        balance : account.balance
     })
 })
 

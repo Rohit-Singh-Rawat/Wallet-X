@@ -8,9 +8,8 @@ import Header from '../components/Header';
 const Settings = () => {
 	return (
 		<div className='flex bg-[black]'>
-			<SideBar current={"Settings"}></SideBar>
+			<SideBar current={'Settings'}></SideBar>
 			<div className='bg-black w-full h-full  text-white'>
-					
 				<div className='flex flex-col gap-7 mt-10 mx-8'>
 					<h1 className='text-4xl font-bold'>Account</h1>
 					<h2 className='text-2xl mt-5 font-semibold'>Profile</h2>
@@ -35,7 +34,7 @@ const Settings = () => {
 						/>{' '}
 					</div>
 					<h2 className='text-2xl  mt-8 font-semibold'>Security</h2>
-					<div className='flex justify-between p-6 border-b-[0.1px] border-yellow-50'>
+					<div className='md:flex justify-between p-6 border-b-[0.1px] border-yellow-50'>
 						<div className='flex gap-10 m-5 items-center'>
 							Current Password{' '}
 							<input
@@ -54,7 +53,7 @@ const Settings = () => {
 						</div>
 					</div>
 					<div className='flex justify-end gap-10 items-center mr-20'>
-            <button className='bg-red-500 p-2 px-4 rounded-xl'>Cancel</button>
+						<button className='bg-red-500 p-2 px-4 rounded-xl'>Cancel</button>
 						<button className='bg-yellow-500 p-2 px-4 rounded-xl'>Save</button>
 					</div>
 				</div>

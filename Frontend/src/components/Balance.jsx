@@ -2,8 +2,8 @@ import React from 'react'
 
 const Balance = ({amount}) => {
   return (
-		<div className=' sm:w-[80%] m-10 lg:m-20 p-1 sm:p-5 sm:pl-16 md:h-[200px] justify-center md:justify-start gap-7 items-center  flex sm:min-w-[400px]   bg-[#1A1A1A]'>
-			<div>
+		<div className='rounded-md shadow-custom flex w-full mx-3 my-6 py-6 lg:py-8  p-1 sm:p-5  lg:h-[200px] justify-center md:justify-start gap-7 items-center  flex-gro   bg-[#1A1A1A]'>
+			<div >
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
 					viewBox='0 0 100 100'
@@ -14,7 +14,7 @@ const Balance = ({amount}) => {
 					<path d='M83.449 54.522a4.347 4.347 0 0 0-4.343 4.342c0 2.395 1.948 4.342 4.343 4.342s4.342-1.948 4.342-4.342a4.347 4.347 0 0 0-4.342-4.342zm0 5.685c-.74 0-1.343-.602-1.343-1.342a1.343 1.343 0 0 1 2.685 0c0 .739-.602 1.342-1.342 1.342z'></path>
 				</svg>
 			</div>
-			<div className='flex flex-col justify-center  '>
+			<div className='flex flex-col justify-center   '>
 				<div className='text-sm text-[#7e7e7e]'>Current balance</div>
 				<div className='text-4xl lg:text-5xl font-semibold'>
 					₹ {parseFloat(amount).toLocaleString('en-IN')}

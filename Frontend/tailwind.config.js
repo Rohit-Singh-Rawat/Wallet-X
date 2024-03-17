@@ -8,8 +8,14 @@ export default {
     extend: {
       colors :  {
         'bgBlack': "#080C08"
-      }
+      },
+      screens: {
+        'xs': '315px',
+        // => @media (min-width: 315px) { ... }
+      },
+    
     },
   },
   plugins: [],
 }
+ 

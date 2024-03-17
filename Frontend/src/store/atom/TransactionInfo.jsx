@@ -4,22 +4,22 @@ export const transactionAtom = atom({
 	key: 'transactionAtom',
 	default: {
 		display :false,
-		firstName: 'John',
-		lastName: 'Doe',
-		accountId: 'account1',
+		firstName: 'DummyFirstName',
+		lastName: 'DummyLastName',
+		accountId: 'DummyAccount',
 		transactionInfo: {
-			transactionId: 'transaction1',
-			type: 'debit',
+			transactionId: 'DummyTransactionId',
+			type: 'DummyType',
 			accountInfo: {
-				accountId: 'account2',
+				accountId: 'DummyAccountId',
 				userInfo: {
-					firstName: 'Alice',
-					lastName: 'Smith',
-					avatar: '#4C8E4C',
+					firstName: 'DummyFName',
+					lastName: 'DummyLName',
+					avatar: 'DummyColor',
 				},
 			},
-			time: '2024-03-12T10:30:00.000Z',
-			amount: 500,
+			time: 'DummyTime',
+			amount: 'DummyAmount',
 		},
 	},
 });

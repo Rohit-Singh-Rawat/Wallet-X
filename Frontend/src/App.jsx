@@ -10,9 +10,9 @@ import Transactions from './pages/Transactions';
 import { RecoilRoot } from 'recoil';
 function App() {
 	const [count, setCount] = useState(0);
-
+	
 	return (
-		<>
+		< >
 			<RecoilRoot>
 				<BrowserRouter>
 					<Routes>

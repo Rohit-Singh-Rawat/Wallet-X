@@ -53,14 +53,14 @@ const Users = ({}) => {
 		}, 
 	]);
 	return (
-		<div className='bg-[#1A1A1A] h-[100%] lg:mt-20 lg:mr-20 w-[50%]  md:row-auto '>
+		<div className='bg-[#1A1A1A] rounded-md mx-3 h-[100%] mt-6 md:w-[50%]   md:row-auto '>
 			
-			<div>
-				<div className='flex justify-start mt-8 gap-20 items-center'>
-					<div className='text-xl font-bold ml-10'>
+			
+				<div className='flex justify-start flex-col px-5  lg:px-10 sm:flex-row mt-8 gap-10 lg:justify-between items-center'>
+					<div className='text-xl font-bold   '>
 						<h2>Users</h2>
 					</div>
-					<div className='flex justify-center items-center bg-black rounded-md p-3 gap-3'>
+					<div className='flex justify-center items-center my-4 sm:mt-0 bg-black rounded-md p-3 gap-3'>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							data-name='Layer 1'
@@ -81,24 +81,24 @@ const Users = ({}) => {
 						/>
 					</div>
 				</div>
-				<div>
+				<div className='text-sm sm:text-md'>
 					{users.map((user) => (
 						<User user={user} />
 					))}
 				</div>
-			</div>
+			
 		</div>
 	);
 };
 
 function User({ user }) {
 	return (
-		<div className='flex justify-between items-center mx-7 my-5 pb-5 px-5 border-b-[0.5px] '>
+		<div className='flex flex-col gap-3  xs:flex-row justify-between items-center mx-7 my-5 pb-5 px-5 border-b-[0.5px] '>
 			<div className='flex items-center gap-4'>
 				<div className='w-7 h-7 flex justify-center rounded-full items-center bg-white text-black uppercase'>{user.firstName[0]}</div>
 				<div>{user.firstName}</div>
 			</div>
-			<div className='bg-green-500 p-2 px-4 rounded-full font-bold text-black flex justify-center items-center'>
+			<div className='bg-green-500 text-sm sm:text-md px-2 p-[2px] sm:p-2 sm:px-4 rounded-full font-bold text-black flex justify-center items-center'>
 				<button>Send Money</button>
 			</div>
 		</div>

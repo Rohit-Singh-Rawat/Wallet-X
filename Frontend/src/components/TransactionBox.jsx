@@ -5,7 +5,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 const TransactionBox = () => {
 	const [info, setInfo] = useRecoilState(transactionAtom);
 	const date = new Date(info.transactionInfo.time);
-
 	const time = `${date.toLocaleString('default', {
 		month: 'long',
 	})} ${date.getDate()}, ${date.getFullYear()} at ${
@@ -13,7 +12,7 @@ const TransactionBox = () => {
 	}:${
 		date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`
 	} ${date.getHours() > 12 ? 'PM' : 'AM'}`;
-	console.log(info);
+
 	return (
 		<div
 			className={`fixed z-20 text-white     flex justify-center items-center w-full h-[100dvh] ${
@@ -25,7 +24,7 @@ const TransactionBox = () => {
 				onClick={() => setInfo({ ...info, display: false })}
 			></div>
 			<button
-				className='fixed top-0 m-5 sm:m-16 right-0'
+				className='z-50 fixed top-0 m-5 sm:m-16 right-0'
 				onClick={() => setInfo({ ...info, display: false })}
 			>
 				<svg
@@ -41,8 +40,8 @@ const TransactionBox = () => {
 					/>
 				</svg>
 			</button>
-			<div className='bg-black p-12 z-40 rounded-xl w-full h-full  sm:w-auto sm:h-auto  flex flex-col '>
-				<div className='flex flex-col justify-center items-center gap-5 sm:gap-3'>
+			<div className='bg-black p-12  z-40 rounded-xl w-full h-full    sm:w-[400px] sm:h-auto  flex flex-col items-center sm:items-stretch '>
+				<div className='flex flex-col justify-center items-center gap-6 sm:gap-3'>
 					<div
 						className='w-14 h-14 flex text-2xl text-center font-bold items-center justify-center uppercase rounded-full border-[1px] border-[#3a3a3a]'
 						style={{
@@ -77,9 +76,9 @@ const TransactionBox = () => {
 							Pay {info.transactionInfo.type == 'credit' ? 'Again' : null}
 						</button>
 					</div>
-					<div className='text-sm border-t-[1px] my-3 p-5'>{time}</div>
+					<div className='text-sm border-t-[1px] my-6 pt-8 sm:my-3 sm:p-5'>{time}</div>
 				</div>
-				<div className='border-[1px]  flex flex-col gap-2 rounded-xl p-5  border-gray-500'>
+				<div className='border-[1px] mt-8 sm:mt-0  min-w-[80%] flex flex-col gap-2 rounded-xl p-5  border-gray-500'>
 					<div>
 						<h5>Transaction ID</h5>
 						<p className='text-sm text-[#7e7e7e]'>

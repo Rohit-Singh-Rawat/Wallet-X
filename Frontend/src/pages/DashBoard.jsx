@@ -102,17 +102,20 @@ const DashBoard = () => {
 			};
 		});
 	}, [dashboard]);
+	console.log
 	return (
-		<div className='flex bg-[black] '>
+		<div className='flex bg-[black] w-full h-full'>
 			<SideBar></SideBar>
 			<TransactionBox></TransactionBox>
 			<div className='bg-black w-full h-full flex flex-col text-white  '>
 				<Header username={dashboard.firstName}></Header>
-				<div className=' flex justify-between '>
-					<div>
+		
+				<div className=' flex justify-center m-auto gap-5 sm:mt-10 w-full sm:w-[70%] md:w-full flex-col md:flex-row	 '>
+					<div className='flex flex-col px-3 min-w-[40%]  items-center justify-stretch'>
 						<Balance amount={dashboard.balance}></Balance>
 						<History transactions={dashboard.transactions}></History>
 					</div>
+					
 					<Users></Users>
 				</div>
 			</div>
