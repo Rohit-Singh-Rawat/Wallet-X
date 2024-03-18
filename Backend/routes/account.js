@@ -5,7 +5,7 @@ const { Account, Transaction } = require('../bd');
 
 const accountRouter = express.Router();
 
-accountRouter.get('/account', authMiddleware, async (req, res) => {
+accountRouter.get('/info', authMiddleware, async (req, res) => {
     const user = await User.findOne({
         _id : req.userId
     })
@@ -51,7 +51,7 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
         if (!senderAccount || !receiverAccount) {
             throw new Error("Account not found")
         }
-        if (amount > senderAccount.balance) {
+        if (amount > senderAccount.balance || parseFloat(amount) <= 0) {
             throw new Error("Insufficient balance")
         }
         const transaction = await Transaction.create([{
@@ -108,7 +108,7 @@ accountRouter.get('/transactions', authMiddleware, async (req, res) => {
         } // Populate receiverAccountId if userId is not the user's userId
     ]);
     transactions = transactions.map(transaction =>{
-        console.log(transaction)
+     
         let type ;
         let accountInfo ={};
         if (transaction.senderAccountId == null){

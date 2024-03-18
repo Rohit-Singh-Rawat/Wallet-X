@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-
-const Eyecomponent = ({showPass, setShowPass}) => {
-  return (
+const EyeComponent = ({ showPass, setShowPass }) => {
+	return (
 		<div
 			className='w-[20px] h-[20px] text-[#a7aab9] flex justify-center mr-1 ml-2 items-center'
 			onClick={() => setShowPass(!showPass)}
@@ -52,6 +51,6 @@ const Eyecomponent = ({showPass, setShowPass}) => {
 			)}
 		</div>
 	);
-}
+};
 
-export default Eyecomponent
+export default EyeComponent;

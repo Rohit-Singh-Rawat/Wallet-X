@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BottomWarning from '../components/BottomWarning';
 import Button from '../components/Button';
 import Heading from '../components/Heading';
@@ -7,24 +7,58 @@ import SubHeading from '../components/SubHeading';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import bgImg from '../assets/imgs/bgImg.jpg';
-import username from '../assets/icons/username.svg'
-import Eyecomponent from '../components/Eyecomponent';
+import username from '../assets/icons/username.svg';
+import EyeComponent from '../components/Eyecomponent';
 
 const Signup = () => {
-	const [signupData, setSignupData] = useState({
+	const [signUpData, setSignUpData] = useState({
 		firstName: '',
 		lastName: '',
 		username: '',
 		password: '',
 	});
+
+	const [errorMsg, setErrorMsg] = useState('');
+
+	useEffect(() => {
+		setErrorMsg('');
+	}, [signUpData]);
+
 	const navigate = useNavigate();
 	const handleOnChange = (e, para) => {
-		setSignupData((prevSignUpData) => ({
+		setSignUpData((prevSignUpData) => ({
 			...prevSignUpData,
 			[para]: e.target.value,
 		}));
 	};
-	const [showPass, setShowPass] = useState(false)
+
+	const handleSignUp = async () => {
+		if (
+			signUpData.username.trim() == '' ||
+			signUpData.password.trim() == '' ||
+			signUpData.firstName.trim() == '' ||
+			signUpData.lastName.trim() == ''
+		) {
+			setErrorMsg('Please Enter Credential');
+			return;
+		}
+		try {
+			const response = await axios.post(
+				'http://localhost:3000/api/v1/user/signup',
+				signUpData
+			);
+			localStorage.setItem('token', response.data.token);
+			navigate('/dashboard');
+		} catch (error) {
+			if (!error?.response) {
+				setErrorMsg('No Server Response');
+			} else if (error?.response) {
+				setErrorMsg(error?.response?.data?.message);
+			}
+		}
+	};
+
+	const [showPass, setShowPass] = useState(false);
 	return (
 		<div className='min-w-[320px]'>
 			<div>
@@ -124,23 +158,18 @@ const Signup = () => {
 							handleOnChange(e, 'password');
 						}}
 					>
-						<Eyecomponent
+						<EyeComponent
 							showPass={showPass}
 							setShowPass={setShowPass}
-						></Eyecomponent>
+						></EyeComponent>
 					</InputBox>
+
+					{errorMsg && <div className='text-red-500 m-2'>{errorMsg}</div>}
+
 					<div className=' flex justify-center items-center'>
 						<Button
 							label={'Sign in'}
-							onClick={async () => {
-								const response = await axios.post(
-									'http://localhost:3000/api/v1/user/signup',
-									signupData
-								);
-
-								localStorage.setItem('token', response.data.token);
-								navigate('/dashboard');
-							}}
+							onClick={() => handleSignUp()}
 						/>
 					</div>
 					<BottomWarning
@@ -153,6 +182,5 @@ const Signup = () => {
 		</div>
 	);
 };
-
 
 export default Signup;

@@ -7,6 +7,7 @@ import TransactionDiv from './TransactionDiv';
 const History = ({ transactions }) => {
 
 	return (
+		
 		<div className='  w-full rounded-md row-auto mx-3   justify-center md:justify-start gap-7   flex flex-col   bg-[#1A1A1A]'>
 			<div className=' pt-10 px-3 xs:px-6 flex items-baseline justify-between'>
 				<h1 className= ' text-lg sm:text-xl'>Recent Transactions</h1>
@@ -15,12 +16,16 @@ const History = ({ transactions }) => {
 				</Link>
 			</div>
 			<div className='mb-5'>
-				{transactions.map((transaction) => (
+				{!transactions.length ?<div className='text-center text-2xl my-10'>
+					No Transactions
+				</div> :  transactions.map((transaction) => (
 					<TransactionDiv
 						key={transaction.transactionId}
 						transaction={transaction}
 					></TransactionDiv>
 				))}
+		
+				
 			</div>
 			<div></div>
 		</div>

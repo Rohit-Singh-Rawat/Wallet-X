@@ -15,21 +15,25 @@ const signupBodySchema = zod.object({
     firstName: zod.string().max(150),
     lastName: zod.string().max(150),
     
+}).refine((data)=>{
+    if (data.password.includes(' ')){
+        return false
+    }
+    return true
 })
 
 userRouter.post('/signup', async (req, res) => {
     const { success } = signupBodySchema.safeParse(req.body);
     if (!success) {
         return res.status(411).json({
-            message: "Invalid inputs",
-            send: req.body
+            message: "Invalid inputs", h: req.body
         })
     }
     const existingUser = await User.findOne({ username: req.body.username });
 
     if (existingUser) {
         return res.status(411).json({
-            message: "User Already Exist"
+            message: "User Already Exist", h: req.body
         })
     }
     const darkColors = [
@@ -50,14 +54,14 @@ userRouter.post('/signup', async (req, res) => {
         username: req.body.username,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        avatar: colors[Math.floor(Math.random() * 10)]
+        avatar: darkColors[Math.floor(Math.random() * 10)]
     });
     user.password = await user.createHash(req.body.password);
     const userId = user._id;
     await user.save();
     await Account.create({
         userId: userId,
-        balance: 1 + Math.random() * 10000
+        balance: Math.floor(1 + Math.random() * 10000)
     })
     const token = jwt.sign({ userId }, JWT_SECRET);
 
@@ -173,7 +177,7 @@ userRouter.get('/dashboard', authMiddleware, async (req, res) => {
         } // Populate receiverAccountId if userId is not the user's userId
     ]);
     transactions = transactions.map(transaction => {
-        console.log(transaction.timestamp)
+   
         let type;
         let accountInfo = {};
         if (transaction.senderAccountId == null) {
@@ -196,12 +200,14 @@ userRouter.get('/dashboard', authMiddleware, async (req, res) => {
             accountInfo: accountInfo,
             time: transaction.timestamp,
             amount: transaction.amount
+            
         }
 
     })
     res.json({
         firstName : user.firstName,
         lastName : user.lastName,
+        accountId : account._id,
         balance : account.balance,
         transactions : transactions
     })
@@ -209,13 +215,16 @@ userRouter.get('/dashboard', authMiddleware, async (req, res) => {
 })
 
 userRouter.get('/search', authMiddleware, async (req, res) => {
-    const filter = req.query.filter || "";
+    const filters = req.query.filter?.split(" ") || [""];
 
     const users = await User.find({
-        $or: [
-            { 'firstName': { $regex: filter, '$options': 'i' } },
-            { 'lastName': { $regex: filter, '$options': 'i' } }
-        ]
+        $or: filters.map(filter => ({
+            $or: [
+                { 'firstName': { $regex: filter, $options: 'i' } },
+                { 'lastName': { $regex: filter, $options: 'i' } },
+                { 'username': { $regex: filter, $options: 'i' } }
+            ]
+        }))
     }).limit(10).exec();
 
     res.json({
@@ -225,7 +234,7 @@ userRouter.get('/search', authMiddleware, async (req, res) => {
                 "lastName": user.lastName,
                 "_id": user._id
             } : null)
-        })
+        }).filter(e => e!=null)
     })
 })
 
