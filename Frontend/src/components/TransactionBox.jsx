@@ -85,7 +85,7 @@ const TransactionBox = () => {
 							{info.transactionInfo.transactionId}
 						</p>
 					</div>
-					<div cl>
+					<div >
 						<h5>
 							To:{' '}
 							{info.transactionInfo.type == 'credit'

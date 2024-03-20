@@ -112,13 +112,17 @@ const updateBodySchema = zod.object({
     firstName: zod.string().max(150).optional(),
     lastName: zod.string().max(150).optional()
 }).refine((data)=>{
+    if (Object.keys(data).length == 0){
+        return false
+    }
     if (data.newPassword && !data.currentPassword){
         return false
     }
     return true
 });
-userRouter.put('/', authMiddleware, async (req, res) => {
+userRouter.put('/change', authMiddleware, async (req, res) => {
     const { success } = await updateBodySchema.safeParse(req.body);
+    console.log(req.body)
     if (!success) {
         return res.status(411).json({
             message: "Invalid inputs"
@@ -131,15 +135,15 @@ userRouter.put('/', authMiddleware, async (req, res) => {
         })
     }
 
-    if (req.body.password) {
-        if (await user.checkPassword(req.body.password)) {
+    if (req.body.newPassword && req.body.currentPassword) {
+        if (await user.checkPassword(req.body.newPassword)) {
             await User.updateOne({ _id: req.userId }, req.body)
             res.json({
                 message: "Updated successfully"
             })
         }
         else {
-            res.json({
+            res.status(411).json({
                 message: "Invalid Password"
             })
         }
@@ -161,8 +165,10 @@ userRouter.get('/dashboard', authMiddleware, async (req, res) => {
         return res.status(404).json({ error: 'User not found' });
     }
     const account = await Account.findOne({ userId: req.userId });
-    await Account.populate([account], { path: 'transactions' });
-
+    await Account.populate([account], { path: 'transactions', options: {limit: 5, sort : {
+        time: -1
+    }} });
+    console.log(account)
 
     let transactions = account.transactions;
     await Account.populate(transactions, [
@@ -232,7 +238,8 @@ userRouter.get('/search', authMiddleware, async (req, res) => {
             return (user._id != req.userId ? {
                 "firstName": user.firstName,
                 "lastName": user.lastName,
-                "_id": user._id
+                "_id": user._id,
+                "avatar" : user.avatar  
             } : null)
         }).filter(e => e!=null)
     })

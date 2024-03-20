@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 const Users = ({}) => {
 	const [users, setUsers] = useState([]);
 	const [searchTerm, setSearchTerm] = useState('');
+	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		const timer = setTimeout(async () => {
+			setIsLoading(true);
 			const token = `Bearer ${localStorage.getItem('token')}`;
 
 			const response = await axios({
@@ -14,13 +17,13 @@ const Users = ({}) => {
 					authorization: token,
 				},
 			});
-			setUsers(response.data.users)
+			setUsers(response.data.users);
+			setIsLoading(false);
 		}, 500);
 		return () => {
 			clearInterval(timer);
 		};
 	}, [searchTerm]);
-	console.log(users)
 
 	return (
 		<div className='bg-[#1A1A1A] rounded-md mx-3 h-[100%] mt-6 md:w-[50%]   md:row-auto '>
@@ -50,11 +53,14 @@ const Users = ({}) => {
 					/>
 				</div>
 			</div>
-			<div className='text-sm sm:text-md'>
-				{users.length ? (
+			<div className='text-sm sm:text-md '>
+				{isLoading ? (
+					<div className='text-center text-2xl my-10'>Fetching Users...</div>
+				) : users.length ? (
 					users.map((user) => (
 						<User
 							user={user}
+							key={user._id}
 						/>
 					))
 				) : (
@@ -66,15 +72,23 @@ const Users = ({}) => {
 };
 
 function User({ user }) {
+	
+	const navigate = useNavigate();
 	return (
-		<div className='flex flex-col gap-3  xs:flex-row justify-between items-center mx-7 my-5 pb-5 px-5 border-b-[0.5px] '>
+		<div className='flex flex-col   xs:flex-row justify-between items-center mx-7 my-7 pb-5 px-5 border-b-[0.5px] last-of-type:border-b-[0] '>
 			<div className='flex items-center gap-4'>
-				<div className='w-7 h-7 flex justify-center rounded-full items-center bg-white text-black uppercase'>
+				<div
+					className='w-7 h-7 flex justify-center rounded-full items-center text-white uppercase'
+					style={{ background: user.avatar }}
+				>
 					{user.firstName[0]}
 				</div>
 				<div>{user.firstName}</div>
 			</div>
-			<div className='bg-green-500 text-sm sm:text-md px-2 p-[2px] sm:p-2 sm:px-4 rounded-full font-bold text-black flex justify-center items-center'>
+			<div
+				onClick={() => navigate(`/send?id=${user._id}&name=${user.firstName} ${user.lastName}`)}
+				className='bg-green-500 text-sm sm:text-md px-2 p-[2px] sm:p-2 sm:px-4 rounded-full font-bold text-black flex justify-center items-center'
+			>
 				<button>Send Money</button>
 			</div>
 		</div>
