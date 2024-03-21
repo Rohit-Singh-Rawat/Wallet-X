@@ -44,7 +44,7 @@ const PrivateRoute = ({ children }) => {
 		};
 
 		verifyToken();
-	}, []);
+	}, [authenticated]);
 	if (loading) {
 		return (
 			<div className='text-4xl sm:text-6xl bg-black  flex flex-col justify-center items-center text-white w-full h-[100vh]'>

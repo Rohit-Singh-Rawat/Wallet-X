@@ -19,8 +19,10 @@ const InputBox = ({ icon, placeholder, onChange, children }) => {
 			</div>
 			<input
 				type={
+					placeholder == 'Email' ? 'email':
 					children ? (children.props.showPass ? 'text' : 'password') : 'text'
 				}
+
 				placeholder={placeholder}
 				className={`border-2 p-1 ml-4  bg-transparent border-none outline-0 ${children ? 'w-[163px] sm:w-full': 'w-full' }`}
 				onChange={onChange}

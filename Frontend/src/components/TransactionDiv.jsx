@@ -13,24 +13,24 @@ const TransactionDiv = ({ transaction }) => {
 				...info,
 				display: true,
 				transactionInfo: {
-					transactionId: tran.transactionId,
-					type: tran.type,
+					transactionId: tran?.transactionId,
+					type: tran?.type,
 					accountInfo: {
-						accountId: tran.accountInfo.accountId,
+						accountId: tran?.accountInfo.accountId,
 						userInfo: {
-							firstName: tran.accountInfo.userInfo.firstName,
-							lastName: tran.accountInfo.userInfo.lastName,
-							avatar: tran.accountInfo.userInfo.avatar,
-							userId: tran.accountInfo.userInfo._id
+							firstName: tran?.accountInfo.userInfo.firstName,
+							lastName: tran?.accountInfo.userInfo.lastName,
+							avatar: tran?.accountInfo.userInfo.avatar,
+							userId: tran?.accountInfo.userInfo._id
 						},
 					},
-					time: tran.time,
-					amount: tran.amount,
+					time: tran?.time,
+					amount: tran?.amount,
 				},
 			};
 		});
 	}
-	const date = new Date(transaction.time);
+	const date = new Date(transaction?.time);
 
 	const time = `${date.toLocaleString('default', {
 		month: 'short',
@@ -45,24 +45,24 @@ const TransactionDiv = ({ transaction }) => {
 			<div className='flex gap-5 items-center'>
 				<div
 					className='w-6 h-6 xs:w-8 xs:h-8 flex text-center font-bold items-center justify-center uppercase rounded-full border-[1px] border-[#3a3a3a]'
-					style={{ background: transaction.accountInfo.userInfo.avatar }}
+					style={{ background: transaction?.accountInfo.userInfo.avatar }}
 				>
-					{transaction.accountInfo.userInfo.firstName[0]}
+					{transaction?.accountInfo.userInfo.firstName[0]}
 				</div>
 				<div>
 					<div className='text-sm xs:text-md'> 
-						{transaction.accountInfo.userInfo.firstName +
+						{transaction?.accountInfo.userInfo.firstName +
 							' ' +
-							transaction.accountInfo.userInfo.lastName}
+							transaction?.accountInfo.userInfo.lastName}
 					</div>
 					<div className='text-xs xs:text-sm text-[#7e7e7e]'>{time}</div>
 				</div>
 			</div>
 
 			<div
-				className={`${transaction.type == 'credit' ? 'text-green-700' : ''} `}
+				className={`${transaction?.type == 'credit' ? 'text-green-700' : ''} `}
 			>
-				{transaction.type == 'credit' ? '+' : null}₹{transaction.amount}
+				{transaction?.type == 'credit' ? '+' : null}₹{transaction?.amount}
 			</div>
 		</div>
 	);

@@ -15,6 +15,8 @@ const SendMoneyBox = ({ id, name }) => {
 			setMsg('');
 			if (amount <= 0) {
 				setErrMsg('Enter Amount more than 0');
+
+				SetIsTransferring(false);
 				return;
 			}
 			const token = `Bearer ${localStorage.getItem('token')}`;

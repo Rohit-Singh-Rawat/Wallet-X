@@ -1,5 +1,5 @@
-const baseURL = import.meta.env.REACT_APP_API_BASE_URL;
+
 import axios from 'axios';
 
-axios.defaults.baseURL = `${baseURL}/api/v1`;
+axios.defaults.baseURL = `${import.meta.env.VITE_API_BASE_URL}/api/v1`;
 export default axios;
