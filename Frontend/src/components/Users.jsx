@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const Users = ({}) => {
@@ -12,7 +12,7 @@ const Users = ({}) => {
 
 			const response = await axios({
 				method: 'get',
-				url: `http://localhost:3000/api/v1/user/search?filter=${searchTerm}`,
+				url: `/user/search?filter=${searchTerm}`,
 				headers: {
 					authorization: token,
 				},
@@ -72,7 +72,6 @@ const Users = ({}) => {
 };
 
 function User({ user }) {
-	
 	const navigate = useNavigate();
 	return (
 		<div className='flex flex-col   xs:flex-row justify-between items-center mx-7 my-7 pb-5 px-5 border-b-[0.5px] last-of-type:border-b-[0] '>
@@ -83,10 +82,16 @@ function User({ user }) {
 				>
 					{user.firstName[0]}
 				</div>
-				<div>{user.firstName}</div>
+				<div className=''>
+					{user.firstName} {user.lastName}
+				</div>
 			</div>
 			<div
-				onClick={() => navigate(`/send?id=${user._id}&name=${user.firstName} ${user.lastName}`)}
+				onClick={() =>
+					navigate(
+						`/send?id=${user._id}&name=${user.firstName} ${user.lastName}`
+					)
+				}
 				className='bg-green-500 text-sm sm:text-md px-2 p-[2px] sm:p-2 sm:px-4 rounded-full font-bold text-black flex justify-center items-center'
 			>
 				<button>Send Money</button>

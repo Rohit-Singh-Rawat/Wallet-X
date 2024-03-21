@@ -1,10 +1,12 @@
 const express = require('express');
 const zod = require('zod');
+
+const mongoose = require('mongoose')
 const rootRouter = require('./index.js');
 const { User, Account, Transaction } = require('../bd.js');
 
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../config.js');
+const JWT_SECRET = process.env.JWT_SECRET
 const { authMiddleware } = require('../middleware.js');
 
 const userRouter = express.Router();
@@ -14,9 +16,9 @@ const signupBodySchema = zod.object({
     password: zod.string().min(8),
     firstName: zod.string().max(150),
     lastName: zod.string().max(150),
-    
-}).refine((data)=>{
-    if (data.password.includes(' ')){
+
+}).refine((data) => {
+    if (data.password.includes(' ')) {
         return false
     }
     return true
@@ -37,19 +39,19 @@ userRouter.post('/signup', async (req, res) => {
         })
     }
     const darkColors = [
-        "#4D8FAC", 
-        "#4C8E4C", 
-        "#8B3E3E", 
-        "#B45341", 
-        "#B06A7A", 
-        "#4D85A9", 
-        "#424C54", 
-        "#7A8EAB", 
-        "#B5B590", 
-        "#B0AE87" 
+        "#4D8FAC",
+        "#4C8E4C",
+        "#8B3E3E",
+        "#B45341",
+        "#B06A7A",
+        "#4D85A9",
+        "#424C54",
+        "#7A8EAB",
+        "#B5B590",
+        "#B0AE87"
     ];
 
-    
+
     const user = new User({
         username: req.body.username,
         firstName: req.body.firstName,
@@ -111,21 +113,26 @@ const updateBodySchema = zod.object({
     newPassword: zod.string().min(8).optional(),
     firstName: zod.string().max(150).optional(),
     lastName: zod.string().max(150).optional()
-}).refine((data)=>{
-    if (Object.keys(data).length == 0){
+}).refine((data) => {
+    if (Object.keys(data).length == 0) {
         return false
     }
-    if (data.newPassword && !data.currentPassword){
+    if (data.newPassword && !data.currentPassword) {
         return false
     }
     return true
 });
 userRouter.put('/change', authMiddleware, async (req, res) => {
     const { success } = await updateBodySchema.safeParse(req.body);
-    console.log(req.body)
+
     if (!success) {
         return res.status(411).json({
             message: "Invalid inputs"
+        })
+    }
+    if (!mongoose.Types.ObjectId.isValid(req.userId)) {
+        return res.status(400).json({
+            message: "Invalid user Id"
         })
     }
     const user = await User.findOne({ _id: req.userId });
@@ -160,30 +167,38 @@ userRouter.put('/change', authMiddleware, async (req, res) => {
 })
 
 userRouter.get('/dashboard', authMiddleware, async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.userId)) {
+        return res.status(400).json({
+            message: "Invalid user Id"
+        })
+    }
     const user = await User.findById(req.userId);
     if (!user) {
         return res.status(404).json({ error: 'User not found' });
     }
     const account = await Account.findOne({ userId: req.userId });
-    await Account.populate([account], { path: 'transactions', options: {limit: 5, sort : {
-        time: -1
-    }} });
-    console.log(account)
+    await Account.populate([account], {
+        path: 'transactions', options: {
+            limit: 5, sort: {
+                timestamp: -1
+            }
+        }
+    });
 
     let transactions = account.transactions;
     await Account.populate(transactions, [
         { path: 'senderAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, // Populate senderAccountId if userId is not the user's userId
         { path: 'receiverAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, {
             path: 'senderAccountId',
-            populate: { path: 'userId', select: ['firstName', 'lastName', 'avatar'] }
+            populate: { path: 'userId', select: ['firstName', 'lastName','_id', 'avatar'] }
         },
         {
             path: 'receiverAccountId',
-            populate: { path: 'userId', select: ['firstName', 'lastName', 'avatar'] }
+            populate: { path: 'userId', select: ['firstName', 'lastName','_id', 'avatar'] }
         } // Populate receiverAccountId if userId is not the user's userId
     ]);
     transactions = transactions.map(transaction => {
-   
+
         let type;
         let accountInfo = {};
         if (transaction.senderAccountId == null) {
@@ -206,16 +221,16 @@ userRouter.get('/dashboard', authMiddleware, async (req, res) => {
             accountInfo: accountInfo,
             time: transaction.timestamp,
             amount: transaction.amount
-            
+
         }
 
     })
     res.json({
-        firstName : user.firstName,
-        lastName : user.lastName,
-        accountId : account._id,
-        balance : account.balance,
-        transactions : transactions
+        firstName: user.firstName,
+        lastName: user.lastName,
+        accountId: account._id,
+        balance: account.balance,
+        transactions: transactions
     })
 
 })
@@ -224,7 +239,7 @@ userRouter.get('/search', authMiddleware, async (req, res) => {
     const filters = req.query.filter?.split(" ") || [""];
 
     const users = await User.find({
-        $or: filters.map(filter => ({
+        $and: filters.map(filter => ({
             $or: [
                 { 'firstName': { $regex: filter, $options: 'i' } },
                 { 'lastName': { $regex: filter, $options: 'i' } },
@@ -239,9 +254,9 @@ userRouter.get('/search', authMiddleware, async (req, res) => {
                 "firstName": user.firstName,
                 "lastName": user.lastName,
                 "_id": user._id,
-                "avatar" : user.avatar  
+                "avatar": user.avatar
             } : null)
-        }).filter(e => e!=null)
+        }).filter(e => e != null)
     })
 })
 

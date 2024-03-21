@@ -8,8 +8,8 @@ import TransactionBox from '../components/TransactionBox';
 import { useRecoilState } from 'recoil';
 import { transactionAtom } from '../store/atom/TransactionInfo';
 import { useMemo } from 'react';
-import axios from 'axios';
-import loading from '../assets/imgs/Loading.gif';
+import axios from '../axios';
+import loading from '../assets/imgs/Loading Square.gif';
 
 const DashBoard = () => {
 	const [info, setInfo] = useRecoilState(transactionAtom);
@@ -19,12 +19,11 @@ const DashBoard = () => {
 
 	useEffect(() => {
 		(async () => {
-			
 			const token = `Bearer ${localStorage.getItem('token')}`;
 			try {
 				const response = await axios({
 					method: 'get',
-					url: 'http://localhost:3000/api/v1/user/dashboard',
+					url: '/user/dashboard',
 					headers: {
 						authorization: token,
 					},
@@ -62,20 +61,20 @@ const DashBoard = () => {
 					<h1 className='text-white   text-center text-7xl'>{errMsg}</h1>
 				</div>
 			) : isLoading ? (
-				<div className='text-6xl bg-black flex justify-center items-center text-white w-full h-[100vh]'>
+				<div className='text-4xl sm:text-6xl bg-black  flex flex-col justify-center items-center text-white w-full h-[100vh]'>
 					<img
 						src={loading}
 						alt=''
+						className=' w-[50%] sm:w-[40%]  md:w-[30%]  '
 					/>
 					Loading...
 				</div>
 			) : (
 				<div className='flex bg-[black] w-full h-full'>
-					<SideBar></SideBar>
+					<SideBar active='Dashboard'></SideBar>
 					<TransactionBox></TransactionBox>
 					<div className='bg-black w-full h-full flex flex-col text-white pb-10 '>
 						<Header username={dashboardInfo?.firstName}></Header>
-
 						<div className=' flex justify-center m-auto gap-5 sm:mt-10  w-full sm:w-[70%] md:w-full flex-col md:flex-row	 '>
 							<div className='flex flex-col px-3 min-w-[40%]  items-center justify-stretch'>
 								<Balance amount={dashboardInfo?.balance}></Balance>

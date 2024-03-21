@@ -1,11 +1,14 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
-const {JWT_SECRET}= require('./config.js')
+
+const JWT_SECRET = process.env.JWT_SECRET
 const rootRouter = require('./routes/index.js');
 
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3500
 
 app.use(cors());
 app.use(express.json());

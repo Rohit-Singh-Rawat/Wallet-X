@@ -4,10 +4,15 @@ import Balance from '../components/Balance';
 import Users from '../components/Users';
 import History from '../components/History';
 import Header from '../components/Header';
-import axios from 'axios';
+import axios from '../axios';
 import { useNavigate } from 'react-router-dom';
-
+import { SideBarOpen } from '../store/atom/sideBarAtom';
+import { useSetRecoilState } from 'recoil';
 const Settings = () => {
+	const setSideBarOpen = useSetRecoilState(SideBarOpen);
+	const handleToggleModal = () => {
+		setIsOpen(!isOpen);
+	};
 	const [newFirstName, setNewFirstName] = useState('');
 	const [newLastName, setNewLastName] = useState('');
 
@@ -41,7 +46,7 @@ const Settings = () => {
 			const token = `Bearer ${localStorage.getItem('token')}`;
 			const response = await axios({
 				method: 'put',
-				url: 'http://localhost:3000/api/v1/user/change',
+				url: '/user/change',
 				headers: {
 					authorization: token,
 				},
@@ -59,26 +64,83 @@ const Settings = () => {
 	};
 
 	return (
-		<div className='flex bg-[black]'>
-			<SideBar current={'Settings'}></SideBar>
+		<div className='flex bg-[black] min-h-[100dvh]'>
+			<SideBar active={'Settings'}></SideBar>
 			<div className='bg-black w-full h-full  text-white'>
-				<div className='flex flex-col gap-7 mt-10 mx-8'>
-					<h1 className='text-4xl font-bold'>Account</h1>
+				<div className='flex flex-col gap-7 my	-10 mx-8'>
+					<div className='flex  mt-10 gap-5'>
+						<button
+							className='block  w-6 sm:w-8 lg:hidden'
+							onClick={() => setSideBarOpen((prev) => !prev)}
+						>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								data-name='Layer 261'
+								viewBox='0 0 46.99 46.88'
+								id='Menu'
+							>
+								<rect
+									width='23.5'
+									height='9.29'
+									x='23.5'
+									fill='#ffffff'
+									rx='4.64'
+									className='color231f20 svgShape'
+								></rect>
+								<rect
+									width='9.41'
+									height='9.29'
+									x='.28'
+									fill='#ffffff'
+									rx='4.64'
+									className='color231f20 svgShape'
+								></rect>
+								<rect
+									width='9.41'
+									height='9.29'
+									x='37.52'
+									y='37.59'
+									fill='#ffffff'
+									rx='4.64'
+									className='color231f20 svgShape'
+								></rect>
+								<rect
+									width='23.5'
+									height='9.29'
+									x='.47'
+									y='37.59'
+									fill='#ffffff'
+									rx='4.64'
+									className='color231f20 svgShape'
+								></rect>
+								<rect
+									width='46.99'
+									height='9.29'
+									y='18.85'
+									fill='#ffffff'
+									rx='4.64'
+									className='color231f20 svgShape'
+								></rect>
+							</svg>
+						</button>
+						<h1 className='text-4xl font-bold'>Account</h1>
+					</div>
+
 					<h2 className='text-2xl mt-5 font-semibold'>Profile</h2>
 					<p className='text-sm font-extralight'>
 						This information will be displayed public to be careful what you
 						share
 					</p>
-					<div className='flex gap-10 mx-5 my-3 items-center'>
+					<div className='flex flex-col sm:flex-row gap-2 sm:gap-8  sm:items-center mx-5 my-3 '>
 						First Name
 						<input
 							type='text'
 							placeholder='Enter your first name'
-							className='bg-transparent pl-3 text-sm outline-none p-2 rounded-xl border-[0.5px] '
+							className=' bg-transparent pl-3 text-sm outline-none p-2 rounded-xl border-[0.5px] '
 							onChange={(e) => setNewFirstName(e.target.value)}
 						/>
 					</div>
-					<div className='flex gap-10 my-3 mx-5 items-center'>
+					<div className='flex flex-col sm:flex-row gap-2 sm:gap-8  sm:items-center my-3 mx-5 '>
 						Last Name{' '}
 						<input
 							type='text'
@@ -88,28 +150,28 @@ const Settings = () => {
 						/>{' '}
 					</div>
 					<h2 className='text-2xl  mt-8 font-semibold'>Security</h2>
-					<div className='md:flex justify-between p-6 border-b-[0.1px] border-yellow-50'>
-						<div className='flex gap-10 m-5 items-center'>
+					<div className=' sm:flex sm:flex-col lg:flex-row  justify-start gap-6 py-6 border-b-[0.1px] border-yellow-50'>
+						<div className='flex flex-col sm:flex-row gap-2 sm:gap-8  sm:items-center mx-5 my-3'>
 							Current Password{' '}
 							<input
 								type='text'
 								placeholder='Enter your Current password'
 								onChange={(e) => setCurrentPassword(e.target.value)}
-								className='bg-transparent pl-3 text-sm outline-none w-full p-2 rounded-xl border-[0.5px] '
+								className='bg-transparent pl-3 text-sm outline-none  p-2 min-w-56 rounded-xl border-[0.5px] '
 							/>
 						</div>
-						<div className='flex gap-10 m-5 items-center mr-40 '>
+						<div className='flex flex-col ml-5 lg:ml-0 sm:flex-row gap-2 sm:gap-8  sm:items-center my-3'>
 							New Password
 							<input
 								type='text'
 								placeholder='Enter your New password'
 								onChange={(e) => setNewPassword(e.target.value)}
-								className='bg-transparent pl-3 text-sm outline-none w-full p-2 rounded-xl border-[0.5px] '
+								className='bg-transparent pl-3 text-sm outline-none  min-w-56 p-2 rounded-xl border-[0.5px] '
 							/>
 						</div>
 					</div>
 					<div
-						className={`flex pl-10 ${
+						className={`flex flex-col sm:flex-row pl-10 ${
 							errMsg || exitMsg ? 'justify-between' : 'justify-end'
 						}`}
 					>
@@ -118,7 +180,7 @@ const Settings = () => {
 						) : errMsg ? (
 							<div className='text-red-400'>{errMsg}</div>
 						) : null}
-						<div className='flex justify-end gap-10 items-center mr-20'>
+						<div className='flex sm:justify-end gap-10 mt-5 sm:mt-0 items-center sm:mr-20'>
 							<button
 								disabled={exitMsg ? true : false}
 								className='bg-red-500 p-2 px-4 rounded-xl disabled:cursor-not-allowed'

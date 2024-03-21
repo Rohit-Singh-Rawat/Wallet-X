@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import Heading from '../components/Heading';
 import InputBox from '../components/InputBox';
 import SubHeading from '../components/SubHeading';
-import axios from 'axios';
+import axios from '../axios';
 import { useNavigate } from 'react-router-dom';
 import bgImg from '../assets/imgs/bgImg.jpg';
 import username from '../assets/icons/username.svg';
@@ -40,7 +40,7 @@ const Signin = () => {
 		try {
 			const response = await axios({
 				method: 'post',
-				url: 'http://localhost:3000/api/v1/user/signin',
+				url: 'user/signin',
 				data: signInData,
 			});
 			localStorage.setItem('token', response.data.token);

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { transactionAtom } from '../store/atom/TransactionInfo';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 
 const TransactionBox = () => {
+	const navigate = useNavigate();
 	const [info, setInfo] = useRecoilState(transactionAtom);
 	const date = new Date(info.transactionInfo.time);
+
 	const time = `${date.toLocaleString('default', {
 		month: 'long',
 	})} ${date.getDate()}, ${date.getFullYear()} at ${
@@ -12,7 +15,6 @@ const TransactionBox = () => {
 	}:${
 		date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`
 	} ${date.getHours() > 12 ? 'PM' : 'AM'}`;
-
 	return (
 		<div
 			className={`fixed z-20 text-white     flex justify-center items-center w-full h-[100dvh] ${
@@ -72,8 +74,12 @@ const TransactionBox = () => {
 						</svg>
 					</div>
 					<div>
-						<button className='bg-green-500 font-semibold  px-5 py-1 rounded-full'>
-							Pay {info.transactionInfo.type == 'credit' ? 'Again' : null}
+						<button className='bg-green-500 font-semibold  px-5 py-1 rounded-full' onClick={()=>{
+							navigate(
+								`/send?id=${info.transactionInfo.accountInfo.userInfo.userId	}&name=${info.transactionInfo.accountInfo.userInfo.firstName} ${info.transactionInfo.accountInfo.userInfo.lastName}`
+							);
+						}}>
+							Pay {info.transactionInfo.type == 'debit' ? 'Again' : null}
 						</button>
 					</div>
 					<div className='text-sm border-t-[1px] my-6 pt-8 sm:my-3 sm:p-5'>{time}</div>

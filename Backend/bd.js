@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-mongoose.connect('mongodb+srv://whaleInSpace:aHX18KLJaNmCnQrf@0x.bxbegwj.mongodb.net/Wallet-App');
+try {
+    mongoose.connect(process.env.DATABASE_URI)
+} catch (err) {
+    console.log(err)
+}
 
 const userSchema = mongoose.Schema({
     username: {

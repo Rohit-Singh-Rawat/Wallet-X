@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const SendMoneyBox = ({ id, name }) => {
@@ -8,15 +8,19 @@ const SendMoneyBox = ({ id, name }) => {
 	const [msg, setMsg] = useState('');
 	const navigate = useNavigate();
 
-		
-	
-
 	const transferMoney = async () => {
+		SetIsTransferring(true);
 		try {
+			setErrMsg('');
+			setMsg('');
+			if (amount <= 0) {
+				setErrMsg('Enter Amount more than 0');
+				return;
+			}
 			const token = `Bearer ${localStorage.getItem('token')}`;
 			const response = await axios({
 				method: 'post',
-				url: 'http://localhost:3000/api/v1/account/transfer',
+				url: '/account/transfer',
 				headers: {
 					authorization: token,
 				},
@@ -25,23 +29,23 @@ const SendMoneyBox = ({ id, name }) => {
 					amount: amount,
 				},
 			});
-			setMsg(response?.data?.message)
+			setMsg(response?.data?.message);
 		} catch (error) {
-			console.log(error)
 			if (!error?.response) {
 				setErrMsg('No Server Response');
 			} else if (error?.response) {
 				setErrMsg(error?.response?.data?.message);
 			}
 		}
+		SetIsTransferring(false);
 	};
 	return (
-		<div className='flex text-white flex-col justify-center border-4	gap-5 border-black ease-in duration-500  hover:shadow-[15px_15px_rgba(0,255,0,1)] w-[30%]    bg-black'>
-			<div className='p-5 pt-10 '>
+		<div className='flex text-white justify-end w-full h-full sm:h-auto sm:w-auto sm:min-w-[350px] flex-col sm:justify-center border-4	gap-5 border-black ease-in duration-500  hover:shadow-[15px_15px_rgba(0,255,0,1)]     bg-black'>
+			<div className=' flex flex-col justify-between	 p-5 pt-10 flex-grow'>
 				<div className='text-3xl text-center font-bold '>
 					<h1>Send Money</h1>
 				</div>
-				<div className='flex flex-col justify-center gap-5 my-8 items-center'>
+				<div className='flex flex-col justify-center gap-10 sm:gap-5 my-8 items-center'>
 					<div className='flex justify-center w-14 h-14  bg-white rounded-full text-black items-center text-2xl font-bold'>
 						{name[0]}
 					</div>
@@ -82,20 +86,26 @@ const SendMoneyBox = ({ id, name }) => {
 				</div>
 			</div>
 
-			<div className=' flex flex-col gap-4 bg-white py-10 px-5 '>
-				{msg? <div className='text-sm text-green-500'> {msg}</div>: errMsg ? <div className='text-sm text-red-500'>{errMsg}</div> : <></>}
+			<div className=' flex flex-col gap-4 bg-white py-16 sm:py-10 px-5 '>
+				{msg ? (
+					<div className='text-sm text-green-500'> {msg}</div>
+				) : errMsg ? (
+					<div className='text-sm text-red-500'>{errMsg}</div>
+				) : (
+					<></>
+				)}
 				<div className='justify-around gap-5  flex'>
 					<button
-						className='bg-black p-3 px-5 flex-grow'
+						className='bg-black p-3 px-5 flex-grow  disabled:cursor-not-allowed'
 						onClick={() => navigate('/dashboard')}
-						disabled={isTransferring}	
+						disabled={isTransferring ? true : false}
 					>
 						Cancel
 					</button>
 					<button
-						className='bg-transparent text-yellow-500 flex-grow border-yellow-500 border-2 p-3 px-5 '
+						className='bg-transparent text-yellow-500 flex-grow border-yellow-500 border-2 p-3 px-5 disabled:cursor-not-allowed'
 						onClick={() => transferMoney()}
-						disabled={isTransferring}
+						disabled={isTransferring ? true : false}
 					>
 						Send
 					</button>

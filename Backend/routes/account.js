@@ -6,6 +6,11 @@ const { Account, Transaction, User } = require('../bd');
 const accountRouter = express.Router();
 
 accountRouter.get('/info', authMiddleware, async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.userId)) {
+        return res.status(400).json({
+            message: "Invalid user Id"
+        })
+    }
     const user = await User.findOne({
         _id : req.userId
     })
@@ -27,6 +32,7 @@ accountRouter.get('/info', authMiddleware, async (req, res) => {
     res.json({
         accountId : account._id,
         firstName : user.firstName,
+        lastName : user.lastName,
         balance : account.balance
     })
 })
@@ -36,9 +42,13 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const { to, amount } = req.body;
+        let { to, amount } = req.body;
+      
         if (to === req.userId) {
             throw new Error("Can not send money to self");
+        }
+        if (!mongoose.Types.ObjectId.isValid(to) || !mongoose.Types.ObjectId.isValid(req.userId) ){
+            throw new Error("Invalid User Id")
         }
         const senderAccount = await Account.findOne({
             userId: req.userId
@@ -46,13 +56,13 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
         const receiverAccount = await Account.findOne({
             userId: to
         }).session(session);
-
         if (!senderAccount || !receiverAccount) {
             throw new Error("Account not found")
         }
         if (amount > senderAccount.balance || parseFloat(amount) <= 0) {
             throw new Error("Insufficient balance")
         }
+        amount = parseFloat(parseFloat(amount).toFixed(2));
         const transaction = await Transaction.create([{
             senderAccountId: senderAccount._id,
             receiverAccountId: receiverAccount._id,
@@ -87,6 +97,11 @@ accountRouter.post('/transfer', authMiddleware, async (req, res) => {
 })
 
 accountRouter.get('/transactions', authMiddleware, async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.userId)) {
+        return res.status(400).json({
+            message: "Invalid user Id"
+        })
+    }
     const account = await Account.findOne({ userId: req.userId });
     if (!account) {
         return res.status(404).json({ error: 'Account not found' });
@@ -96,15 +111,15 @@ accountRouter.get('/transactions', authMiddleware, async (req, res) => {
     
     let  transactions = account.transactions;
     await Account.populate(transactions, [
-        { path: 'senderAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, // Populate senderAccountId if userId is not the user's userId
+        { path: 'senderAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, 
         { path: 'receiverAccountId', select: 'userId', match: { userId: { $ne: req.userId } } }, {
             path: 'senderAccountId',
-            populate: { path: 'userId', select: ['firstName', 'lastName','avatar'] }
+            populate: { path: 'userId', select: ['firstName', 'lastName','avatar','_id'] }
         },
         {
             path: 'receiverAccountId',
-            populate: { path: 'userId', select: ['firstName', 'lastName', 'avatar'] }
-        } // Populate receiverAccountId if userId is not the user's userId
+            populate: { path: 'userId', select: ['firstName', 'lastName', 'avatar', '_id'] }
+        } 
     ]);
     transactions = transactions.map(transaction =>{
      

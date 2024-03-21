@@ -16,6 +16,7 @@ export const transactionAtom = atom({
 					firstName: 'DummyFName',
 					lastName: 'DummyLName',
 					avatar: 'DummyColor',
+					userId : 'DummyId'
 				},
 			},
 			time: 'DummyTime',

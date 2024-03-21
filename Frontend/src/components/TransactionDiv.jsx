@@ -6,6 +6,7 @@ import { transactionAtom } from '../store/atom/TransactionInfo';
 
 const TransactionDiv = ({ transaction }) => {
 	const setTransactionInfo = useSetRecoilState(transactionAtom);
+	
 	function showTransaction(tran) {
 		setTransactionInfo((info) => {
 			return {
@@ -20,6 +21,7 @@ const TransactionDiv = ({ transaction }) => {
 							firstName: tran.accountInfo.userInfo.firstName,
 							lastName: tran.accountInfo.userInfo.lastName,
 							avatar: tran.accountInfo.userInfo.avatar,
+							userId: tran.accountInfo.userInfo._id
 						},
 					},
 					time: tran.time,
