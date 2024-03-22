@@ -11,6 +11,7 @@ import username from '../assets/icons/username.svg';
 import EyeComponent from '../components/Eyecomponent';
 
 const Signup = () => {
+	const [isLoading, setIsLoading] = useState(false);
 	const [signUpData, setSignUpData] = useState({
 		firstName: '',
 		lastName: '',
@@ -43,6 +44,7 @@ const Signup = () => {
 			return;
 		}
 		try {
+			setIsLoading(true);
 			const response = await axios.post('/user/signup', signUpData);
 			localStorage.setItem('token', response.data.token);
 			navigate('/dashboard');
@@ -52,12 +54,18 @@ const Signup = () => {
 			} else if (error?.response) {
 				setErrorMsg(error?.response?.data?.message);
 			}
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	const [showPass, setShowPass] = useState(false);
 	return (
-		<div className='min-w-[320px]'>
+		<div
+			className={`min-w-[320px] ${
+				isLoading ? 'cursor-progress' : 'cursor-default'
+			}`}
+		>
 			<div>
 				<div className=' absolute top-0 h-[100dvh] min-w-[320px] w-[100dvw]  z-0 mix-blend-overlay'>
 					<img
@@ -167,6 +175,90 @@ const Signup = () => {
 						<Button
 							label={'Sign in'}
 							onClick={() => handleSignUp()}
+							loading={
+								isLoading ? (
+									<svg
+										xmlns='http://www.w3.org/2000/svg'
+										enablbackground='new 0 0 2000 2000'
+										viewBox='0 0 2000 2000'
+										id='process'
+										className='animate-spin h-7 w-7'
+									>
+										<circle
+											cx='1014.48'
+											cy='484.57'
+											r='115.8'
+											fill='#161616'
+										></circle>
+										<circle
+											cx='745.91'
+											cy='556.54'
+											r='106.15'
+											fill='#0f0f0f'
+										></circle>
+										<circle
+											cx='549.3'
+											cy='753.14'
+											r='96.5'
+											fill='#3a3a3a'
+										></circle>
+										<circle
+											cx='477.34'
+											cy='1021.71'
+											r='86.85'
+											fill='#414141'
+										></circle>
+										<circle
+											cx='549.3'
+											cy='1290.28'
+											r='82.03'
+											fill='#484848'
+										></circle>
+										<circle
+											cx='745.91'
+											cy='1486.89'
+											r='77.2'
+											fill='#727272'
+										></circle>
+										<circle
+											cx='1014.48'
+											cy='1558.85'
+											r='72.38'
+											fill='#737373'
+										></circle>
+										<circle
+											cx='1283.04'
+											cy='1486.89'
+											r='67.55'
+											fill='#959595'
+										></circle>
+										<circle
+											cx='1479.65'
+											cy='1290.28'
+											r='62.73'
+											fill='#a6a6a6'
+										></circle>
+										<circle
+											cx='1551.61'
+											cy='1021.71'
+											r='57.9'
+											fill='#bfbfbf'
+										></circle>
+										<circle
+											cx='1479.65'
+											cy='753.14'
+											r='53.08'
+											fill='#cfcfcf'
+										></circle>
+										<circle
+											cx='1283.04'
+											cy='556.54'
+											r='48.25'
+											fill='#dfdfdf'
+										></circle>
+									</svg>
+								) : null
+							}
 						/>
 					</div>
 					<BottomWarning

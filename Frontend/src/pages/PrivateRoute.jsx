@@ -5,15 +5,18 @@ import { Route, Navigate } from 'react-router-dom'; // Changed import to use Nav
 import { useAuth } from '../context/AuthContext';
 import loadingimg from '../assets/imgs/Loading Square.gif';
 const PrivateRoute = ({ children }) => {
-	const [loading, setLoading] = useState(true);
+	
 
-	const { authenticated, setAuthenticated } = useAuth();
-
+	const { authenticated, setAuthenticated, loading, setLoading } = useAuth();
+	
 	useEffect(() => {
+		
 		const verifyToken = async () => {
 			try {
+				setLoading(true)
 				const token = localStorage.getItem('token');
 				if (token) {
+					
 					const response = await axios({
 						method: 'post',
 						url: '/me',
@@ -29,6 +32,7 @@ const PrivateRoute = ({ children }) => {
 						response?.data?.message == 'User is Authenticated'
 					) {
 						setAuthenticated(true);
+						
 					} else {
 						setAuthenticated(false);
 					}
@@ -44,7 +48,7 @@ const PrivateRoute = ({ children }) => {
 		};
 
 		verifyToken();
-	}, [authenticated]);
+	},[authenticated]);
 	if (loading) {
 		return (
 			<div className='text-4xl sm:text-6xl bg-black  flex flex-col justify-center items-center text-white w-full h-[100vh]'>
@@ -57,7 +61,6 @@ const PrivateRoute = ({ children }) => {
 			</div>
 		);
 	}
-
 	return <>{authenticated ? <>{children}</> : <Navigate to='/signin' />}</>;
 };
 

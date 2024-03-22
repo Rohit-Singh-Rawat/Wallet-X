@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext'; // Import your AuthProvider
-import PrivateRoute from './pages/PrivateRoute' // Import your PrivateRoute component
+import PrivateRoute from './pages/PrivateRoute'; // Import your PrivateRoute component
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 import DashBoard from './pages/DashBoard';
@@ -68,13 +68,7 @@ function App() {
 							/>
 							<Route
 								path='/'
-								element={
-									authenticated ? (
-										<Navigate to='/dashboard' />
-									) : (
-										<Navigate to='/signin' />
-									)
-								}
+								element={<Navigate to='/dashboard' />}
 							/>
 							<Route
 								path='*'

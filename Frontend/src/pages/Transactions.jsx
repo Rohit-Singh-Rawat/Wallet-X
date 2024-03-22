@@ -15,9 +15,9 @@ const Transactions = () => {
 	const [errMsg, setErrMsg] = useState('');
 	const setTransactionInfo = useSetRecoilState(transactionAtom);
 	const setSideBarOpen = useSetRecoilState(SideBarOpen);
-	const handleToggleModal = () => {
-		setIsOpen(!isOpen);
-	};
+	useEffect(() => {
+		setSideBarOpen(false);
+	}, []);
 	useEffect(() => {
 		setIsLoading(true);
 		(async () => {

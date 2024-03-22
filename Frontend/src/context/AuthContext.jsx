@@ -9,54 +9,35 @@ export const AuthProvider = ({ children }) => {
 
 	const [authenticated, setAuthenticated] = useState(false);
 
-	useEffect(() => {
-		const verifyToken = async () => {
-			try {
-				if (token) {
-					const response = await axios({
-						method: 'POST',
-						url: '/me',
-						headers: {
-							'Content-Type': 'application/json',
-							authorization: `Bearer ${token}`,
-						},
-					});
-
-					if (
-						response?.status == '200' ||
-						response?.data?.Authenticated ||
-						response?.data?.message == 'User is Authenticated'
-					) {
-						setLoading(false);
-						setAuthenticated((e) => true);
-					} else {
-						setAuthenticated(false);
-						logout();
-					}
-				}
-			} catch (error) {
-				console.error('Error verifying token:', error);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		verifyToken();
-	}, [token]);
 
 	const login = (token) => {
+
 		localStorage.setItem('token', token);
 		setToken(token);
 	};
 
 	const logout = () => {
-		localStorage.removeItem('token');
-		setToken(null);
+		
+		
+		window.location = '/signin';
+
 		setAuthenticated(false);
+		localStorage.removeItem('token');
+		setLoading(true);
+		setToken(null);
+		setLoading(false);
 	};
 	return (
 		<AuthContext.Provider
-			value={{ authenticated, setAuthenticated, token, loading, login, logout }}
+			value={{
+				authenticated,
+				setAuthenticated,
+				token,
+				loading,
+				setLoading,
+				login,
+				logout,
+			}}
 		>
 			{children}
 		</AuthContext.Provider>

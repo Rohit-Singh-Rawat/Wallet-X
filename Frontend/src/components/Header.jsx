@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSetRecoilState } from 'recoil';
 import { SideBarOpen } from '../store/atom/sideBarAtom';
 const Header = ({ username, avatar }) => {
 	const setSideBarOpen = useSetRecoilState(SideBarOpen);
-	const handleToggleModal = () => {
-		setIsOpen(!isOpen);
-	};
+	useEffect(() => {
+		setSideBarOpen(false);
+	}, []);
 	return (
-		<div className=' text-sm sm:text-lg flex justify-between p-2 items-center border-b-2 border-[#1A1A1A]'>
+		<div className='text-sm sm:text-lg flex justify-between p-2 items-center border-b-2 border-[#1A1A1A]'>
 			<div className='flex gap-10 sm:gap-5   items-center p-3 ml-2'>
 				<button
 					className='block  w-6 sm:w-7 lg:hidden'

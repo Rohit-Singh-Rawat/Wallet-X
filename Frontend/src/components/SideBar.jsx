@@ -72,6 +72,7 @@ export const SideBar = ({active}) => {
 				<div className='flex flex-col w-full mb-[150px]'>
 					<Link to={'/dashboard'}>
 						<SidebarTabs
+							
 							label={'Dashboard'}
 							active={active == 'Dashboard' ? true : false}
 							logo={
@@ -128,9 +129,7 @@ export const SideBar = ({active}) => {
 				<div
 					className='flex justify-start px-5 w-full pb-8 items-center'
 					onClick={() => {
-						logout();	
-						navigate('/signin');
-						window.location.reload();
+						logout();
 					}}
 				>
 					<button className='flex justify-center items-center text-[#757575] hover:text-red-400'>
