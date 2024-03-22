@@ -173,7 +173,7 @@ const Signup = () => {
 
 					<div className=' flex justify-center items-center'>
 						<Button
-							label={'Sign in'}
+							label={'Sign up'}
 							onClick={() => handleSignUp()}
 							loading={
 								isLoading ? (
