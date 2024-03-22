@@ -130,6 +130,7 @@ export const SideBar = ({active}) => {
 					className='flex justify-start px-5 w-full pb-8 items-center'
 					onClick={() => {
 						logout();
+						navigate('/signin');	
 					}}
 				>
 					<button className='flex justify-center items-center text-[#757575] hover:text-red-400'>

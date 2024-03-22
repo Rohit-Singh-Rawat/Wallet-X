@@ -9,8 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import bgImg from '../assets/imgs/bgImg.jpg';
 import username from '../assets/icons/username.svg';
 import EyeComponent from '../components/Eyecomponent';
+import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
+	const {login} = useAuth();
 	const [isLoading, setIsLoading] = useState(false);
 	const [signUpData, setSignUpData] = useState({
 		firstName: '',
@@ -46,7 +48,7 @@ const Signup = () => {
 		try {
 			setIsLoading(true);
 			const response = await axios.post('/user/signup', signUpData);
-			localStorage.setItem('token', response.data.token);
+			login(response.data.token);
 			navigate('/dashboard');
 		} catch (error) {
 			if (!error?.response) {

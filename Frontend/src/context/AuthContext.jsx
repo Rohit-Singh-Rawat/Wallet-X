@@ -8,24 +8,54 @@ export const AuthProvider = ({ children }) => {
 	const [loading, setLoading] = useState(true);
 
 	const [authenticated, setAuthenticated] = useState(false);
+	useEffect(() => {
+		const verifyToken = async () => {
+			try {
+				setLoading(true);
+				const token = localStorage.getItem('token');
+				if (token) {
+					const response = await axios({
+						method: 'post',
+						url: '/me',
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: `Bearer ${token}`,
+						},
+					});
 
+					if (
+						response?.status == '200' ||
+						response?.data?.Authenticated ||
+						response?.data?.message == 'User is Authenticated'
+					) {
+						setAuthenticated(true);
+					} else {
+						setAuthenticated(false);
+					}
+				} else {
+					setAuthenticated(false);
+				}
+			} catch (error) {
+				console.error('Error verifying token:', error);
+				setAuthenticated(false);
+			} finally {
+				console.log("authenticated")
+				setLoading(false);
+			}
+		};
+
+		verifyToken();
+	},[]);
 
 	const login = (token) => {
-
 		localStorage.setItem('token', token);
 		setToken(token);
 	};
 
 	const logout = () => {
 		
+		localStorage.removeItem('token')
 		
-		window.location = '/signin';
-
-		setAuthenticated(false);
-		localStorage.removeItem('token');
-		setLoading(true);
-		setToken(null);
-		setLoading(false);
 	};
 	return (
 		<AuthContext.Provider

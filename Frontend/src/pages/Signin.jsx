@@ -9,8 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import bgImg from '../assets/imgs/bgImg.jpg';
 import username from '../assets/icons/username.svg';
 import EyeComponent from '../components/Eyecomponent';
+import { useAuth } from '../context/AuthContext';
 
 const Signin = () => {
+	const {login} = useAuth()
 	const [isLoading, setIsLoading] = useState(false);
 
 	const [signInData, setSignInData] = useState({
@@ -47,9 +49,7 @@ const Signin = () => {
 				url: 'user/signin',
 				data: signInData,
 			});
-			
-				localStorage.setItem('token', response.data.token);
-				
+				login(response.data.token);
 				navigate('/dashboard');
 			
 			

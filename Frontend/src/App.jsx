@@ -12,7 +12,7 @@ import NotFound from './pages/NotFound';
 
 function App() {
 	const { authenticated } = useAuth();
-
+	console.log(authenticated)
 	return (
 		<>
 			<RecoilRoot>

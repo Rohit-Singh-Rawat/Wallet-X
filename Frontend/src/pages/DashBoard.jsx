@@ -70,7 +70,7 @@ const DashBoard = () => {
 					Loading...
 				</div>
 			) : (
-				<div className='flex bg-[black] w-full h-full'>
+				<div className='flex bg-[black] w-full h-full min-h-[100dvh]'>
 					<SideBar active='Dashboard'></SideBar>
 					<TransactionBox></TransactionBox>
 					<div className='bg-black w-full h-full flex flex-col text-white pb-10 '>

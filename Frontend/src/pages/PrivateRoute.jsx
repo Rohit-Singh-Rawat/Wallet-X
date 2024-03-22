@@ -1,19 +1,19 @@
 // PrivateRoute.js
 import axios from '../axios';
 import React, { useEffect, useState } from 'react';
-import { Route, Navigate } from 'react-router-dom'; // Changed import to use Navigate
+import { Route, Navigate, useLocation } from 'react-router-dom'; // Changed import to use Navigate
 import { useAuth } from '../context/AuthContext';
 import loadingimg from '../assets/imgs/Loading Square.gif';
 const PrivateRoute = ({ children }) => {
-	
-
-	const { authenticated, setAuthenticated, loading, setLoading } = useAuth();
-	
+	const [loading,setLoading] = useState('true')
+	const { authenticated, setAuthenticated } = useAuth();
+	const location = useLocation();
 	useEffect(() => {
-		
+		console.log("ppppppppppppppppppp")
+		setLoading(true);
 		const verifyToken = async () => {
 			try {
-				setLoading(true)
+				setLoading(true);
 				const token = localStorage.getItem('token');
 				if (token) {
 					
@@ -32,6 +32,7 @@ const PrivateRoute = ({ children }) => {
 						response?.data?.message == 'User is Authenticated'
 					) {
 						setAuthenticated(true);
+						console.log("reached")
 						
 					} else {
 						setAuthenticated(false);
@@ -48,7 +49,7 @@ const PrivateRoute = ({ children }) => {
 		};
 
 		verifyToken();
-	},[authenticated]);
+	},[location.pathname]);
 	if (loading) {
 		return (
 			<div className='text-4xl sm:text-6xl bg-black  flex flex-col justify-center items-center text-white w-full h-[100vh]'>
@@ -61,6 +62,7 @@ const PrivateRoute = ({ children }) => {
 			</div>
 		);
 	}
+
 	return <>{authenticated ? <>{children}</> : <Navigate to='/signin' />}</>;
 };
 
