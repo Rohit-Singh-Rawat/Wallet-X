@@ -131,6 +131,7 @@ export const SideBar = ({active}) => {
 					onClick={() => {
 						logout();
 						navigate('/signin');	
+						window.location.reload();
 					}}
 				>
 					<button className='flex justify-center items-center text-[#757575] hover:text-red-400'>

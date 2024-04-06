@@ -9,7 +9,6 @@ const PrivateRoute = ({ children }) => {
 	const { authenticated, setAuthenticated } = useAuth();
 	const location = useLocation();
 	useEffect(() => {
-		console.log("ppppppppppppppppppp")
 		setLoading(true);
 		const verifyToken = async () => {
 			try {
@@ -32,7 +31,6 @@ const PrivateRoute = ({ children }) => {
 						response?.data?.message == 'User is Authenticated'
 					) {
 						setAuthenticated(true);
-						console.log("reached")
 						
 					} else {
 						setAuthenticated(false);
